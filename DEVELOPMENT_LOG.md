@@ -18,7 +18,8 @@
 
 | 任务 ID | 分支 | 执行者 | 状态 | 开始日期 | PR | 交接报告 | OpenAPI/后端基线 | 最近更新 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PM-03 | `docs/PM-03-collaboration-visibility` | Codex | REVIEW | 2026-09-06 | [#2](https://github.com/tednved/graduation-frontend/pull/2) | `docs/handoffs/PM-03.md` | 无契约变化 | 2026-09-10 |
+| PM-03 | 前端仓库建立后创建同名 docs 分支 | Codex | IN_PROGRESS | 2026-09-06 | 待创建 | `docs/handoffs/PM-03.md` | 无契约变化 | 2026-09-06 |
+| FE-01 | `feat/FE-01-miniprogram-shell` | Claude | IN_PROGRESS | 2026-09-10 | [#1](https://github.com/tednved/graduation-frontend/pull/1)（Draft） | `docs/handoffs/FE-01.md` | 无契约变化 | 2026-09-10 |
 
 ## 合并后更新要求
 
