@@ -1,19 +1,8 @@
 // app.js
+// 仅保留最小可运行骨架。wx.login 与令牌、会话管理属于 FE-02，请勿在此自动调用登录链路。
 App({
-  onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
-  },
   globalData: {
+    // 会话令牌与用户摘要由 FE-02 的 store/session-store.js 负责写入。
     userInfo: null
   }
 })
