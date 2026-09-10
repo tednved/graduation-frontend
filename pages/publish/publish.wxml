@@ -1,0 +1,5 @@
+<!--pages/publish/publish.wxml-->
+<view class="page">
+  <view class="page__title">发布</view>
+  <view class="page__hint">页面建设中</view>
+</view>

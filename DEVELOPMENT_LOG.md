@@ -12,13 +12,14 @@
 
 ## 当前基线
 
-微信原生小程序初始化骨架和 AppID 已存在。FE-01 的 TabBar 与目标页面结构尚未在本日志登记为完成，后续以实际任务和验收结果为准。
+微信原生小程序初始化骨架和 AppID 已存在。FE-01 已建立五项 TabBar（首页/分类/发布/消息/我的）与五个 Tab 占位页，替换了开发者工具示例页；项目负责人已完成微信开发者工具 GUI 验收。
 
 ## 状态索引
 
 | 任务 ID | 分支 | 执行者 | 状态 | 开始日期 | PR | 交接报告 | OpenAPI/后端基线 | 最近更新 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PM-03 | `docs/PM-03-collaboration-visibility` | Codex | REVIEW | 2026-09-06 | [#2](https://github.com/tednved/graduation-frontend/pull/2) | `docs/handoffs/PM-03.md` | 无契约变化 | 2026-09-10 |
+| PM-03 | `docs/PM-03-collaboration-visibility` | Codex | DONE | 2026-09-06 | [#2](https://github.com/tednved/graduation-frontend/pull/2) | `docs/handoffs/PM-03.md` | 无契约变化 | 2026-09-10 |
+| FE-01 | `feat/FE-01-miniprogram-shell` | Claude | REVIEW | 2026-09-10 | [#1](https://github.com/tednved/graduation-frontend/pull/1) | `docs/handoffs/FE-01.md` | 无契约变化 | 2026-09-10 |
 
 ## 合并后更新要求
 
