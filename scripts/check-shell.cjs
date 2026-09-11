@@ -4,7 +4,8 @@
  *
  * 只依赖 Node 内置模块，校验：
  *   1. 仓库内全部 .json 可被严格解析；
- *   2. 五个 Tab 页各具备 .js/.json/.wxml/.wxss 四件套（共 20 个文件）；
+ *   2. app.json 声明的每个页面各具备 .js/.json/.wxml/.wxss 四件套，
+ *      且五个 Tab 页仍在 pages 中；
  *   3. tabBar 五项的数量、顺序、文案与页面路径；
  *   4. 启动页为 pages/home/home；
  *   5. 代码与配置中无 pages/index、pages/logs、utils/util 残留引用。
@@ -91,7 +92,7 @@ check('全部 .json 严格解析', () => {
   return `${files.length} 个文件`;
 });
 
-check('五个 Tab 页四件套（20 个文件）', () => {
+check('每个声明页面均具备四件套', () => {
   const pages = app.pages;
   if (!Array.isArray(pages) || pages.length === 0) {
     throw new Error('app.json 的 pages 缺失或为空');
@@ -104,9 +105,15 @@ check('五个 Tab 页四件套（20 个文件）', () => {
     }
   }
   if (missing.length > 0) throw new Error(`缺少页面文件：${missing.join(', ')}`);
-  const created = pages.length * PAGE_EXTENSIONS.length;
-  if (created !== 20) throw new Error(`页面文件总数为 ${created}，预期 20（五个页面 × 四件套）`);
-  return `${pages.length} 个页面 × 4 = ${created}`;
+
+  // 五个 Tab 页必须仍在 pages 中，顺序由 tabBar 校验单独保证。
+  const declared = new Set(pages);
+  const missingTabs = EXPECTED_TABS.map((tab) => tab.pagePath).filter(
+    (pagePath) => !declared.has(pagePath)
+  );
+  if (missingTabs.length > 0) throw new Error(`Tab 页未在 pages 中声明：${missingTabs.join(', ')}`);
+
+  return `${pages.length} 个页面 × 4 = ${pages.length * PAGE_EXTENSIONS.length} 个文件`;
 });
 
 check('tabBar 数量、顺序与文案', () => {

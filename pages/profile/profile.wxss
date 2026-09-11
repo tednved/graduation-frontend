@@ -1,20 +1,140 @@
 /* pages/profile/profile.wxss */
-.page {
+.me {
+  min-height: 100vh;
+  padding: 32rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.me__empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 80rpx 40rpx;
+  min-height: 70vh;
 }
 
-.page__title {
-  font-size: 44rpx;
+.me__empty-title {
+  font-size: 36rpx;
   font-weight: 600;
+  color: #1f1f1f;
 }
 
-.page__hint {
-  margin-top: 20rpx;
+.me__empty-desc {
+  margin-top: 16rpx;
   font-size: 28rpx;
   color: #999999;
+}
+
+.me__login {
+  width: 400rpx;
+  margin-top: 60rpx;
+}
+
+.me__card {
+  display: flex;
+  align-items: center;
+  padding: 40rpx 32rpx;
+  border-radius: 16rpx;
+  background-color: #ffffff;
+}
+
+.me__avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+.me__avatar--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  color: #999999;
+}
+
+.me__ident {
+  margin-left: 32rpx;
+}
+
+.me__name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.me__badge {
+  display: inline-block;
+  margin-top: 16rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+.me__badge--muted {
+  background-color: #f0f0f0;
+  color: #8a8a8a;
+}
+
+.me__badge--warning {
+  background-color: #fff6e5;
+  color: #d98b00;
+}
+
+.me__badge--success {
+  background-color: #e7f8ee;
+  color: #07c160;
+}
+
+.me__badge--danger {
+  background-color: #fdecec;
+  color: #e34d4d;
+}
+
+.me__rows {
+  margin-top: 24rpx;
+  border-radius: 16rpx;
+  background-color: #ffffff;
+}
+
+.me__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.me__row:last-child {
+  border-bottom: none;
+}
+
+.me__label {
+  font-size: 28rpx;
+  color: #8a8a8a;
+}
+
+.me__value {
+  font-size: 28rpx;
+  color: #1f1f1f;
+}
+
+.me__actions {
+  margin-top: 24rpx;
+}
+
+.me__action {
+  margin-top: 20rpx;
+  background-color: #ffffff;
+}
+
+.me__action--danger {
+  color: #e34d4d;
+}
+
+.me__hint {
+  margin-top: 24rpx;
+  font-size: 24rpx;
+  color: #999999;
+  text-align: center;
 }

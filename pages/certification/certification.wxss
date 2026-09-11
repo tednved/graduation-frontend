@@ -1,0 +1,122 @@
+/* pages/certification/certification.wxss */
+.cert {
+  min-height: 100vh;
+  padding: 32rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.cert__loading {
+  padding: 80rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  color: #999999;
+}
+
+.cert__status {
+  padding: 40rpx 32rpx;
+  border-radius: 16rpx;
+  background-color: #ffffff;
+}
+
+.cert__status--muted {
+  border-left: 8rpx solid #c8c8c8;
+}
+
+.cert__status--warning {
+  border-left: 8rpx solid #d98b00;
+}
+
+.cert__status--success {
+  border-left: 8rpx solid #07c160;
+}
+
+.cert__status--danger {
+  border-left: 8rpx solid #e34d4d;
+}
+
+.cert__status-label {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.cert__status-desc {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #8a8a8a;
+}
+
+.cert__detail {
+  margin-top: 24rpx;
+  border-radius: 16rpx;
+  background-color: #ffffff;
+}
+
+.cert__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.cert__row:last-child {
+  border-bottom: none;
+}
+
+.cert__label {
+  font-size: 28rpx;
+  color: #8a8a8a;
+}
+
+.cert__value {
+  font-size: 28rpx;
+  color: #1f1f1f;
+}
+
+.cert__form {
+  margin-top: 24rpx;
+}
+
+.cert__field {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 32rpx;
+  background-color: #ffffff;
+}
+
+.cert__field:first-child {
+  border-radius: 16rpx 16rpx 0 0;
+}
+
+.cert__field + .cert__field {
+  margin-top: 2rpx;
+  border-radius: 0 0 16rpx 16rpx;
+}
+
+.cert__form .cert__label {
+  width: 160rpx;
+}
+
+.cert__input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1f1f1f;
+}
+
+.cert__note {
+  margin-top: 24rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.cert__submit {
+  margin-top: 60rpx;
+}
+
+.cert__refresh {
+  margin-top: 40rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999999;
+}

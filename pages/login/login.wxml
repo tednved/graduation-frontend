@@ -1,0 +1,15 @@
+<!--pages/login/login.wxml-->
+<view class="login">
+  <view class="login__brand">校园二手交易</view>
+  <view class="login__desc">登录后可发布商品、编辑资料并提交校园认证</view>
+
+  <button
+    class="login__button"
+    type="primary"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+    bindtap="onLogin"
+  >微信一键登录</button>
+
+  <view class="login__back" wx:if="{{canGoBack}}" bindtap="onBack">暂不登录，返回浏览</view>
+</view>
