@@ -1,8 +1,11 @@
 // services/auth-api.js
 // 登录、刷新、退出。令牌写入统一走 store/session-store.js。
 //
-// 这三个接口自身不参与 401 自动刷新：登录失败就是登录失败，
-// 刷新失败会清空会话由页面跳登录页，退出必须无条件清空本地会话。
+// 登录与刷新自身不参与 401 自动刷新：登录失败就是登录失败，
+// 刷新失败会清空会话由页面跳登录页。
+// 退出不同：契约要求 POST /auth/logout 携带 Bearer Token，服务端据此撤销刷新令牌，
+// 所以退出走标准的「401 刷新一次后重放」，避免 Access Token 恰好过期时刷新令牌留在服务端不被撤销；
+// 无论服务端结果如何，本地会话都必须清空。
 
 const request = require('./request.js');
 const store = require('../store/session-store.js');
@@ -64,7 +67,9 @@ function refresh(refreshToken, deviceId) {
   });
 }
 
-// 退出登录：服务端调用失败也要清空本地会话，否则用户会卡在已失效的登录态。
+// 退出登录：撤销服务端的刷新令牌。契约要求该接口携带 Bearer Token，
+// 因此保持默认的鉴权头与一次刷新重放；服务端调用失败也要清空本地会话，
+// 否则用户会卡在已失效的登录态。
 function logout() {
   const session = store.getSession();
   const refreshToken = session && session.refreshToken;
@@ -78,9 +83,7 @@ function logout() {
   return request.request({
     method: 'POST',
     path: '/auth/logout',
-    data: { refreshToken: refreshToken },
-    auth: false,
-    skipAuthRefresh: true
+    data: { refreshToken: refreshToken }
   }).then(done, done);
 }
 

@@ -80,6 +80,30 @@ describe('接口调用契约', function () {
     );
   });
 
+  it('退出登录携带 Bearer Token，登录与刷新不携带', async function () {
+    await authApi.logout();
+    const logoutCall = http.calls.find(function (call) {
+      return pathOf(call.url) === '/auth/logout';
+    });
+    assert.ok(logoutCall, '已发出退出请求');
+    // 契约中 POST /auth/logout 的 security 为 bearerAuth；缺少令牌服务端会 401，
+    // 刷新令牌就不会被撤销。
+    assert.equal(logoutCall.header.Authorization, 'Bearer a1');
+
+    store.setSession({ accessToken: 'a1', refreshToken: 'r1', deviceId: 'd1', user: { id: '1' } });
+    await authApi.wechatLogin('test-login-code', 'd1');
+    await authApi.refresh('r1', 'd1');
+
+    const anonymous = http.calls.filter(function (call) {
+      const path = pathOf(call.url);
+      return path === '/auth/wechat-login' || path === '/auth/refresh';
+    });
+    assert.equal(anonymous.length, 2);
+    anonymous.forEach(function (call) {
+      assert.equal(call.header.Authorization, undefined, pathOf(call.url) + ' 不应携带令牌');
+    });
+  });
+
   it('认证提交只带 MANUAL 与明文姓名学号，不带证据文件', async function () {
     await certApi.submitManual('TestUser', '2021000000');
     const body = http.calls[0].data;
