@@ -19,8 +19,12 @@
   - 页面：登录、我的（资料）、编辑资料、校园认证、分类（两级树）五个页面全部实现，含卸载守卫与防重复点击。
   - 常量与工具：`constants/enums.js`、`constants/error-codes.js`（§7.2 全 25 个错误码）、`utils/id.js`、
     `utils/page-guard.js`、`utils/error-handler.js`、`config/index.js`。
-  - 测试：`tests/` 4 个测试文件共 36 个用例，`node --test` 全通过。
+  - 测试：`tests/` 4 个测试文件共 37 个用例，`node --test` 全通过。
   - `scripts/check-shell.cjs` 由「固定 20 个页面文件」改为「每个声明页面均有四件套 + 五个 Tab 页仍在 pages 中」。
+- 审查修正（审核者复查时发现并修复）：`services/auth-api.js` 的 `logout()` 原以 `auth: false` 发出，
+  与契约 `POST /auth/logout` 的 `security: bearerAuth` 冲突——服务端会 401，刷新令牌永远不会被撤销，
+  只清空了本地会话。已改为携带 Bearer 并保留标准的「401 刷新一次后重放」，
+  同时新增回归用例锁定「退出带令牌、登录与刷新不带令牌」。提交 `705b7a7`。
 - 未完成：
   - 微信开发者工具 GUI 主链验收（本执行者无法运行开发者工具，需项目负责人执行）。
   - 与真实 BE-MVP-01 后端的联调；当前仅按已合并 OpenAPI 做契约级校验与本地替身测试。
@@ -79,7 +83,7 @@
 | 命令 | 结果 |
 | --- | --- |
 | `node scripts/check-shell.cjs` | 6/6 项通过（8 个页面 × 4 = 32 个文件） |
-| `node --test "tests/**/*.test.js"` | 36 个用例全部通过 |
+| `node --test "tests/**/*.test.js"` | 37 个用例全部通过 |
 | `node --check <每个新增/修改的 .js>` | 全部通过 |
 | 全部新增 `.json` 严格解析 | 通过（`check-shell` 覆盖） |
 
