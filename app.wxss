@@ -14,3 +14,134 @@ input,
 textarea {
   box-sizing: border-box;
 }
+
+/* 商品卡片：首页、搜索、收藏三个列表共用同一套外观。 */
+.item-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 20rpx;
+}
+
+.item-card__cover {
+  width: 200rpx;
+  height: 200rpx;
+  flex-shrink: 0;
+  background-color: #f5f6f8;
+}
+
+.item-card__body {
+  flex: 1;
+  padding: 18rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.item-card__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1f1f1f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.item-card__price {
+  display: flex;
+  align-items: baseline;
+}
+
+.item-card__price-now {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fa5151;
+}
+
+.item-card__price-old {
+  margin-left: 12rpx;
+  font-size: 24rpx;
+  color: #b0b0b0;
+  text-decoration: line-through;
+}
+
+.item-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.item-card__tag {
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  background-color: #f0f0f0;
+  color: #666666;
+  font-size: 22rpx;
+}
+
+.item-card__favorite {
+  color: #999999;
+}
+
+/* 商品状态标签：色调由 enums.ITEM_STATUS_TONE 决定。 */
+.item-status {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+}
+
+.item-status--success {
+  background-color: #e8f8ee;
+  color: #07c160;
+}
+
+.item-status--warning {
+  background-color: #fff5e6;
+  color: #fa9d3b;
+}
+
+.item-status--muted {
+  background-color: #f0f0f0;
+  color: #999999;
+}
+
+.item-status--danger {
+  background-color: #fdecec;
+  color: #fa5151;
+}
+
+/* 列表通用的加载 / 空态 / 错误态 */
+.list-state {
+  padding: 120rpx 40rpx;
+  text-align: center;
+  color: #999999;
+}
+
+.list-state__title {
+  font-size: 30rpx;
+  color: #666666;
+}
+
+.list-state__desc {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #b0b0b0;
+}
+
+.list-state__btn {
+  margin-top: 32rpx;
+}
+
+.list-more {
+  padding: 30rpx 0 50rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #b0b0b0;
+}

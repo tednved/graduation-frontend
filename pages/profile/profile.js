@@ -8,9 +8,11 @@ const store = require('../../store/session-store.js');
 const enums = require('../../constants/enums.js');
 const pageGuard = require('../../utils/page-guard.js');
 const errorHandler = require('../../utils/error-handler.js');
+const mediaUrl = require('../../utils/media-url.js');
 
 const EDIT_ROUTE = '/pages/profile-edit/profile-edit';
 const CERT_ROUTE = '/pages/certification/certification';
+const FAVORITES_ROUTE = '/pages/favorites/favorites';
 
 const EMPTY_VIEW = {
   loggedIn: false,
@@ -66,8 +68,10 @@ Page({
       if (!profile) return;
       // 会话里的用户摘要同步刷新，其它页面读到的昵称/头像保持一致。
       const patch = { nickname: profile.nickname };
-      if (profile.avatarUrl !== undefined) patch.avatarUrl = profile.avatarUrl;
+      if (profile.avatarUrl !== undefined) patch.avatarUrl = mediaUrl.resolveMediaUrl(profile.avatarUrl);
       store.updateUser(patch);
+
+      profile.avatarUrl = mediaUrl.resolveMediaUrl(profile.avatarUrl);
 
       self.alive.setData(self, {
         loading: false,
@@ -91,6 +95,10 @@ Page({
 
   onEditProfile: function () {
     wx.navigateTo({ url: EDIT_ROUTE });
+  },
+
+  onGoFavorites: function () {
+    wx.navigateTo({ url: FAVORITES_ROUTE });
   },
 
   onGoCertification: function () {

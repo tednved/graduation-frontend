@@ -1,0 +1,48 @@
+<!--pages/favorites/favorites.wxml-->
+<view class="favorites">
+  <view class="list-state" wx:if="{{needLogin}}">
+    <view class="list-state__title">登录后查看收藏</view>
+    <view class="list-state__desc">收藏的商品会保存在你的账号里</view>
+    <button class="list-state__btn" size="mini" type="primary" bindtap="onGoLogin">去登录</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{loading}}">
+    <view class="list-state__desc">加载中…</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">收藏加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{items.length === 0}}">
+    <view class="list-state__title">还没有收藏任何商品</view>
+    <view class="list-state__desc">在商品详情页点「收藏」就会出现在这里</view>
+    <button class="list-state__btn" size="mini" bindtap="onGoHome">去逛逛</button>
+  </view>
+
+  <view class="favorites__list" wx:else>
+    <view class="item-card" wx:for="{{items}}" wx:key="id" data-id="{{item.id}}" bindtap="onTapItem">
+      <image class="item-card__cover" src="{{item.coverImageUrl}}" mode="aspectFill" lazy-load />
+      <view class="item-card__body">
+        <view class="item-card__title">{{item.title}}</view>
+        <view class="item-card__price">
+          <text class="item-card__price-now">{{item.priceText}}</text>
+          <text class="item-card__price-old" wx:if="{{item.originalPriceText}}">{{item.originalPriceText}}</text>
+        </view>
+        <view class="item-card__meta">
+          <text class="item-status item-status--{{item.statusTone}}">{{item.statusLabel}}</text>
+          <text
+            class="favorites__remove"
+            data-id="{{item.id}}"
+            catchtap="onRemove"
+          >{{removingId === item.id ? '取消中…' : '取消收藏'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="list-more" wx:if="{{loadingMore}}">加载中…</view>
+    <view class="list-more" wx:elif="{{!hasNext}}">没有更多了</view>
+  </view>
+</view>

@@ -1,0 +1,14 @@
+/* pages/favorites/favorites.wxss */
+.favorites {
+  padding: 20rpx 24rpx 40rpx;
+}
+
+.favorites__list {
+  margin-top: 4rpx;
+}
+
+.favorites__remove {
+  font-size: 24rpx;
+  color: #fa5151;
+  padding: 4rpx 8rpx;
+}
