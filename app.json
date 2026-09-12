@@ -7,7 +7,10 @@
     "pages/profile/profile",
     "pages/login/login",
     "pages/profile-edit/profile-edit",
-    "pages/certification/certification"
+    "pages/certification/certification",
+    "pages/search/search",
+    "pages/item-detail/item-detail",
+    "pages/favorites/favorites"
   ],
   "window": {
     "navigationBarTextStyle": "black",

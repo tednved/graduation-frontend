@@ -11,6 +11,7 @@ const errorHandler = require('../../utils/error-handler.js');
 
 const EDIT_ROUTE = '/pages/profile-edit/profile-edit';
 const CERT_ROUTE = '/pages/certification/certification';
+const FAVORITES_ROUTE = '/pages/favorites/favorites';
 
 const EMPTY_VIEW = {
   loggedIn: false,
@@ -91,6 +92,10 @@ Page({
 
   onEditProfile: function () {
     wx.navigateTo({ url: EDIT_ROUTE });
+  },
+
+  onGoFavorites: function () {
+    wx.navigateTo({ url: FAVORITES_ROUTE });
   },
 
   onGoCertification: function () {

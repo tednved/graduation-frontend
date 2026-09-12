@@ -1,5 +1,64 @@
 <!--pages/home/home.wxml-->
-<view class="page">
-  <view class="page__title">首页</view>
-  <view class="page__hint">页面建设中</view>
+<view class="home">
+  <view class="home__search" bindtap="onTapSearch">
+    <text class="home__search-icon">🔍</text>
+    <text class="home__search-placeholder">搜索在售商品</text>
+  </view>
+
+  <scroll-view class="home__categories" scroll-x enable-flex wx:if="{{categories.length}}">
+    <view
+      class="home__chip {{activeCategoryId === 'ALL' ? 'home__chip--active' : ''}}"
+      data-id="ALL"
+      bindtap="onTapCategory"
+    >全部</view>
+    <view
+      class="home__chip {{activeCategoryId === item.id ? 'home__chip--active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onTapCategory"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <!-- 骨架屏：首屏加载时占位，避免列表高度跳变 -->
+  <view class="home__skeleton" wx:if="{{loading}}">
+    <view class="home__skeleton-card" wx:for="{{[1,2,3,4]}}" wx:key="*this">
+      <view class="home__skeleton-cover"></view>
+      <view class="home__skeleton-lines">
+        <view class="home__skeleton-line"></view>
+        <view class="home__skeleton-line home__skeleton-line--short"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">商品加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{items.length === 0}}">
+    <view class="list-state__title">还没有在售商品</view>
+    <view class="list-state__desc">成为第一个发布闲置的人吧</view>
+  </view>
+
+  <view class="home__list" wx:else>
+    <view class="item-card" wx:for="{{items}}" wx:key="id" data-id="{{item.id}}" bindtap="onTapItem">
+      <image class="item-card__cover" src="{{item.coverImageUrl}}" mode="aspectFill" lazy-load />
+      <view class="item-card__body">
+        <view class="item-card__title">{{item.title}}</view>
+        <view class="item-card__price">
+          <text class="item-card__price-now">{{item.priceText}}</text>
+          <text class="item-card__price-old" wx:if="{{item.originalPriceText}}">{{item.originalPriceText}}</text>
+        </view>
+        <view class="item-card__meta">
+          <text class="item-card__tag" wx:if="{{item.conditionLabel}}">{{item.conditionLabel}}</text>
+          <text class="item-card__favorite">♡ {{item.favoriteCount}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="list-more" wx:if="{{loadingMore}}">加载中…</view>
+    <view class="list-more" wx:elif="{{!hasNext}}">没有更多了</view>
+  </view>
 </view>

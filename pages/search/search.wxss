@@ -1,0 +1,136 @@
+/* pages/search/search.wxss */
+.search {
+  padding: 20rpx 24rpx 40rpx;
+}
+
+.search__bar {
+  display: flex;
+  align-items: center;
+  height: 72rpx;
+  padding: 0 20rpx;
+  background-color: #ffffff;
+  border-radius: 36rpx;
+}
+
+.search__input {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.search__clear {
+  padding: 0 12rpx;
+  font-size: 34rpx;
+  color: #cccccc;
+  line-height: 1;
+}
+
+.search__submit {
+  padding-left: 16rpx;
+  font-size: 28rpx;
+  color: #07c160;
+}
+
+.search__sorts {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.search__sort {
+  padding: 8rpx 24rpx;
+  margin-right: 16rpx;
+  background-color: #ffffff;
+  border-radius: 26rpx;
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.search__sort--active {
+  background-color: #e8f8ee;
+  color: #07c160;
+}
+
+.search__filters {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+  padding: 16rpx 20rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+}
+
+.search__filter {
+  font-size: 26rpx;
+  color: #1f1f1f;
+  padding-right: 20rpx;
+  white-space: nowrap;
+}
+
+.search__price {
+  flex: 1;
+  min-width: 0;
+  background-color: #f5f6f8;
+  border-radius: 10rpx;
+  padding: 10rpx 14rpx;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.search__price-sep {
+  padding: 0 12rpx;
+  color: #cccccc;
+}
+
+.search__apply {
+  padding: 8rpx 20rpx;
+  margin-left: 16rpx;
+  font-size: 26rpx;
+  color: #07c160;
+  white-space: nowrap;
+}
+
+.search__reset {
+  margin-top: 40rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #576b95;
+}
+
+.search__history {
+  margin-top: 32rpx;
+}
+
+.search__history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search__history-title {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.search__history-clear {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.search__history-list {
+  margin-top: 20rpx;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.search__history-item {
+  padding: 10rpx 24rpx;
+  margin: 0 16rpx 16rpx 0;
+  background-color: #ffffff;
+  border-radius: 26rpx;
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.search__list {
+  margin-top: 24rpx;
+}

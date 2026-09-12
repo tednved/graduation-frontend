@@ -19,7 +19,13 @@ function uploadAvatar(filePath) {
   return uploadImage(filePath, FileBizType.AVATAR);
 }
 
+// 商品图片。上传只产生 UPLOADED 文件对象，真正与商品绑定发生在创建/修改商品时。
+function uploadItemImage(filePath) {
+  return uploadImage(filePath, FileBizType.ITEM_IMAGE);
+}
+
 module.exports = {
   uploadImage: uploadImage,
-  uploadAvatar: uploadAvatar
+  uploadAvatar: uploadAvatar,
+  uploadItemImage: uploadItemImage
 };

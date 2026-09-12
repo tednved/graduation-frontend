@@ -36,6 +36,7 @@
     </view>
 
     <view class="me__actions">
+      <button class="me__action" bindtap="onGoFavorites">我的收藏</button>
       <button class="me__action" bindtap="onEditProfile">编辑资料</button>
       <button class="me__action" bindtap="onGoCertification">校园认证</button>
       <button

@@ -1,5 +1,87 @@
 <!--pages/publish/publish.wxml-->
-<view class="page">
-  <view class="page__title">发布</view>
-  <view class="page__hint">页面建设中</view>
+<view class="publish">
+  <view class="publish__loading" wx:if="{{checking}}">正在检查发布条件…</view>
+
+  <view class="publish__blocked" wx:elif="{{blocked}}">
+    <view class="publish__blocked-title">暂时不能发布商品</view>
+    <view class="publish__blocked-desc">{{blockedReason}}</view>
+    <button class="publish__blocked-btn" type="primary" bindtap="onGoLogin" wx:if="{{blockedReason === '请先登录后再发布商品'}}">去登录</button>
+    <button class="publish__blocked-btn" type="primary" bindtap="onGoCertification" wx:else>去认证</button>
+  </view>
+
+  <block wx:else>
+    <view class="publish__section">
+      <view class="publish__label">商品图片<text class="publish__hint">（1～{{imageMax}} 张，第一张为封面）</text></view>
+      <view class="publish__images">
+        <view class="publish__image-item" wx:for="{{images}}" wx:key="fileId">
+          <image class="publish__image" src="{{item.url}}" mode="aspectFill" data-index="{{index}}" bindtap="onPreviewImage" />
+          <view class="publish__image-tools">
+            <text class="publish__image-btn" data-index="{{index}}" data-delta="-1" bindtap="onMoveImage">←</text>
+            <text class="publish__image-btn" data-index="{{index}}" data-delta="1" bindtap="onMoveImage">→</text>
+            <text class="publish__image-btn publish__image-btn--danger" data-index="{{index}}" bindtap="onRemoveImage">×</text>
+          </view>
+        </view>
+        <view class="publish__image-add" wx:if="{{images.length < imageMax}}" bindtap="onChooseImage">
+          <text class="publish__image-add-icon">+</text>
+          <text class="publish__image-add-text">{{uploading ? '上传中…' : '添加图片'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="publish__section">
+      <view class="publish__field">
+        <view class="publish__label">标题</view>
+        <input class="publish__input" value="{{title}}" maxlength="80" placeholder="例如：九成新自行车" bindinput="onTitleInput" />
+      </view>
+
+      <view class="publish__field">
+        <view class="publish__label">描述</view>
+        <textarea class="publish__textarea" value="{{description}}" maxlength="2000" placeholder="成色、使用时长、交易方式等（10～2000 字）" bindinput="onDescriptionInput" />
+      </view>
+
+      <view class="publish__field publish__field--row">
+        <view class="publish__field-half">
+          <view class="publish__label">售价（元）</view>
+          <input class="publish__input" type="digit" value="{{price}}" placeholder="0.00" bindinput="onPriceInput" />
+        </view>
+        <view class="publish__field-half">
+          <view class="publish__label">原价（选填）</view>
+          <input class="publish__input" type="digit" value="{{originalPrice}}" placeholder="0.00" bindinput="onOriginalPriceInput" />
+        </view>
+      </view>
+
+      <view class="publish__field">
+        <view class="publish__label">成色</view>
+        <picker mode="selector" range="{{conditionOptions}}" range-key="label" value="{{conditionIndex}}" bindchange="onConditionChange">
+          <view class="publish__picker">
+            {{conditionIndex >= 0 ? conditionOptions[conditionIndex].label : '请选择成色'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="publish__field">
+        <view class="publish__label">分类</view>
+        <picker mode="selector" range="{{categoryOptions}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategoryChange">
+          <view class="publish__picker">
+            {{categoryIndex >= 0 ? categoryOptions[categoryIndex].label : (loadingCategories ? '分类加载中…' : '请选择二级分类')}}
+          </view>
+        </picker>
+        <view class="publish__hint publish__hint--block" wx:if="{{!loadingCategories && categoryOptions.length === 0}}">
+          没有可用的二级分类，请联系管理员先创建分类。
+        </view>
+      </view>
+    </view>
+
+    <view class="publish__actions">
+      <button class="publish__btn" loading="{{submitting}}" disabled="{{submitting || uploading}}" bindtap="onSubmit" data-publish="0">保存草稿</button>
+      <button class="publish__btn publish__btn--primary" type="primary" loading="{{submitting}}" disabled="{{submitting || uploading}}" bindtap="onSubmit" data-publish="1">
+        {{editingId ? '保存并上架' : '立即发布'}}
+      </button>
+    </view>
+
+    <view class="publish__draft">
+      <text class="publish__draft-link" bindtap="onRestoreDraft">恢复草稿</text>
+      <text class="publish__draft-link" bindtap="onDiscardDraft">清空表单</text>
+    </view>
+  </block>
 </view>

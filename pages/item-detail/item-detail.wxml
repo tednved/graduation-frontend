@@ -1,0 +1,96 @@
+<!--pages/item-detail/item-detail.wxml-->
+<view class="detail">
+  <view class="list-state" wx:if="{{loading}}">
+    <view class="list-state__desc">加载中…</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{invalid}}">
+    <view class="list-state__title">{{invalidReason}}</view>
+    <view class="list-state__desc">它可能已被作者删除或下架</view>
+    <button class="list-state__btn" size="mini" bindtap="onGoHome">去首页看看</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <block wx:else>
+    <view class="detail__notice" wx:if="{{item.statusNotice}}">{{item.statusNotice}}</view>
+
+    <view class="detail__gallery">
+      <swiper class="detail__swiper" bindchange="onSwiperChange" circular="{{images.length > 1}}">
+        <swiper-item wx:for="{{images}}" wx:key="fileId" wx:for-item="img" wx:for-index="imgIndex">
+          <image
+            class="detail__image"
+            src="{{img.url}}"
+            mode="aspectFill"
+            data-index="{{imgIndex}}"
+            bindtap="onPreviewImage"
+          />
+        </swiper-item>
+      </swiper>
+      <view class="detail__counter" wx:if="{{images.length > 1}}">{{current + 1}} / {{images.length}}</view>
+      <view class="detail__placeholder" wx:if="{{images.length === 0}}">暂无图片</view>
+    </view>
+
+    <view class="detail__block">
+      <view class="detail__price">
+        <text class="detail__price-now">{{item.priceText}}</text>
+        <text class="detail__price-old" wx:if="{{item.originalPriceText}}">{{item.originalPriceText}}</text>
+      </view>
+      <view class="detail__title">{{item.title}}</view>
+      <view class="detail__tags">
+        <text class="item-status item-status--{{item.statusTone}}">{{item.statusLabel}}</text>
+        <text class="item-card__tag" wx:if="{{item.conditionLabel}}">{{item.conditionLabel}}</text>
+      </view>
+      <view class="detail__stats">
+        <text>{{item.viewCount}} 次浏览</text>
+        <text class="detail__stats-sep">·</text>
+        <text>{{item.favoriteCount}} 人收藏</text>
+        <block wx:if="{{item.publishedAt}}">
+          <text class="detail__stats-sep">·</text>
+          <text>{{item.publishedAt}} 发布</text>
+        </block>
+      </view>
+    </view>
+
+    <view class="detail__block">
+      <view class="detail__section-title">卖家</view>
+      <view class="detail__seller">{{item.sellerName || '匿名同学'}}</view>
+    </view>
+
+    <view class="detail__block">
+      <view class="detail__section-title">商品描述</view>
+      <view class="detail__description">{{item.description}}</view>
+    </view>
+
+    <view class="detail__actions">
+      <view
+        class="detail__favorite {{favorited ? 'detail__favorite--on' : ''}}"
+        wx:if="{{canFavorite}}"
+        bindtap="onToggleFavorite"
+      >{{favorited ? '♥ 已收藏' : '♡ 收藏'}}</view>
+
+      <button
+        class="detail__action-btn"
+        size="mini"
+        wx:for="{{item.ownerActions}}"
+        wx:key="action"
+        wx:for-item="act"
+        data-action="{{act.action}}"
+        disabled="{{acting}}"
+        bindtap="onTapAction"
+      >{{act.label}}</button>
+
+      <button
+        class="detail__action-btn detail__action-btn--primary"
+        type="primary"
+        wx:if="{{item.canBuy}}"
+        data-action="BUY"
+        bindtap="onTapAction"
+      >我想要</button>
+    </view>
+  </block>
+</view>

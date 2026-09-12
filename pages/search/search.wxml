@@ -1,0 +1,99 @@
+<!--pages/search/search.wxml-->
+<view class="search">
+  <view class="search__bar">
+    <input
+      class="search__input"
+      value="{{keyword}}"
+      maxlength="{{keywordMax}}"
+      placeholder="搜索在售商品"
+      confirm-type="search"
+      bindinput="onKeywordInput"
+      bindconfirm="onKeywordConfirm"
+    />
+    <text class="search__clear" wx:if="{{keyword}}" bindtap="onClearKeyword">×</text>
+    <text class="search__submit" bindtap="onKeywordConfirm">搜索</text>
+  </view>
+
+  <view class="search__sorts">
+    <view
+      class="search__sort {{sortIndex === index ? 'search__sort--active' : ''}}"
+      wx:for="{{sortOptions}}"
+      wx:key="value"
+      data-index="{{index}}"
+      bindtap="onSortChange"
+    >{{item.label}}</view>
+  </view>
+
+  <view class="search__filters">
+    <picker mode="selector" range="{{conditionOptions}}" range-key="label" value="{{conditionIndex}}" bindchange="onConditionChange">
+      <view class="search__filter">{{conditionOptions[conditionIndex].label}}</view>
+    </picker>
+    <input class="search__price" type="digit" value="{{minPrice}}" placeholder="最低价" bindinput="onMinPriceInput" />
+    <text class="search__price-sep">—</text>
+    <input class="search__price" type="digit" value="{{maxPrice}}" placeholder="最高价" bindinput="onMaxPriceInput" />
+    <view class="search__apply" bindtap="onApplyPrice">确定</view>
+  </view>
+
+  <!-- 未发起搜索时展示历史，避免空白页 -->
+  <block wx:if="{{!searched}}">
+    <view class="search__history" wx:if="{{history.length}}">
+      <view class="search__history-head">
+        <text class="search__history-title">搜索历史</text>
+        <text class="search__history-clear" bindtap="onClearHistory">清空</text>
+      </view>
+      <view class="search__history-list">
+        <view
+          class="search__history-item"
+          wx:for="{{history}}"
+          wx:key="*this"
+          data-keyword="{{item}}"
+          bindtap="onTapHistory"
+        >{{item}}</view>
+      </view>
+    </view>
+    <view class="list-state" wx:else>
+      <view class="list-state__desc">输入关键词开始搜索</view>
+    </view>
+
+    <view class="search__reset" bindtap="onResetFilters">重置筛选条件</view>
+  </block>
+
+  <block wx:else>
+    <view class="search__results" wx:if="{{loading}}">
+      <view class="list-state">
+        <view class="list-state__desc">搜索中…</view>
+      </view>
+    </view>
+
+    <view class="list-state" wx:elif="{{failed}}">
+      <view class="list-state__title">搜索失败</view>
+      <view class="list-state__desc">请检查网络后重试</view>
+      <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+    </view>
+
+    <view class="list-state" wx:elif="{{items.length === 0}}">
+      <view class="list-state__title">没有找到相关商品</view>
+      <view class="list-state__desc">换个关键词或放宽价格区间试试</view>
+    </view>
+
+    <view class="search__list" wx:else>
+      <view class="item-card" wx:for="{{items}}" wx:key="id" data-id="{{item.id}}" bindtap="onTapItem">
+        <image class="item-card__cover" src="{{item.coverImageUrl}}" mode="aspectFill" lazy-load />
+        <view class="item-card__body">
+          <view class="item-card__title">{{item.title}}</view>
+          <view class="item-card__price">
+            <text class="item-card__price-now">{{item.priceText}}</text>
+            <text class="item-card__price-old" wx:if="{{item.originalPriceText}}">{{item.originalPriceText}}</text>
+          </view>
+          <view class="item-card__meta">
+            <text class="item-card__tag" wx:if="{{item.conditionLabel}}">{{item.conditionLabel}}</text>
+            <text class="item-card__favorite">♡ {{item.favoriteCount}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="list-more" wx:if="{{loadingMore}}">加载中…</view>
+      <view class="list-more" wx:elif="{{!hasNext}}">没有更多了</view>
+    </view>
+  </block>
+</view>
