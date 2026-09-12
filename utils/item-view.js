@@ -3,9 +3,10 @@
 // 页面只负责把结果放进 data，不再各自拼字符串。
 //
 // 契约约定：金额是两位小数字符串（如 "12.34"），时间为 UTC ISO-8601；
-// 这里只做展示转换，不改变数值本身，也不构造任何图片 URL。
+// 这里只做展示转换；站内媒体相对地址统一转为后端绝对地址。
 
 const enums = require('../constants/enums.js');
+const mediaUrl = require('./media-url.js');
 
 // 金额展示：契约保证两位小数字符串；异常输入退化为占位符而不是 "¥undefined"。
 function formatPrice(price) {
@@ -37,7 +38,7 @@ function buildCardView(item) {
     status: source.status || '',
     statusLabel: source.status ? enums.itemStatusLabel(source.status) : '',
     statusTone: source.status ? enums.itemStatusTone(source.status) : 'muted',
-    coverImageUrl: source.coverImageUrl || '',
+    coverImageUrl: mediaUrl.resolveMediaUrl(source.coverImageUrl),
     favoriteCount: source.favoriteCount || 0,
     viewCount: source.viewCount || 0,
     publishedAt: formatDate(source.publishedAt || source.createdAt),
@@ -80,6 +81,8 @@ function buildDetailView(item) {
     publishedAt: formatDate(source.publishedAt || source.createdAt),
     images: (source.images || []).filter(function (image) {
       return image && image.url;
+    }).map(function (image) {
+      return Object.assign({}, image, { url: mediaUrl.resolveMediaUrl(image.url) });
     }),
     version: source.version,
     isOwner: !!source.isOwner,

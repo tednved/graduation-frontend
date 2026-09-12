@@ -10,6 +10,7 @@ const fileApi = require('../../services/file-api.js');
 const store = require('../../store/session-store.js');
 const pageGuard = require('../../utils/page-guard.js');
 const errorHandler = require('../../utils/error-handler.js');
+const mediaUrl = require('../../utils/media-url.js');
 
 const NICKNAME_MAX = 20;
 const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
@@ -52,7 +53,7 @@ Page({
         loading: false,
         nickname: self.original.nickname,
         phone: self.original.phone,
-        avatarUrl: profile.avatarUrl || ''
+        avatarUrl: mediaUrl.resolveMediaUrl(profile.avatarUrl)
       });
     }, function (error) {
       self.alive.setData(self, { loading: false });
@@ -100,7 +101,7 @@ Page({
       self.avatarChange = { fileId: fileObject.fileId };
       self.alive.setData(self, {
         uploading: false,
-        avatarUrl: fileObject.url || filePath
+        avatarUrl: mediaUrl.resolveMediaUrl(fileObject.url) || filePath
       });
     }, function (error) {
       self.alive.setData(self, { uploading: false });

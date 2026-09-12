@@ -15,6 +15,7 @@ const enums = require('../../constants/enums.js');
 const itemForm = require('./item-form.js');
 const pageGuard = require('../../utils/page-guard.js');
 const errorHandler = require('../../utils/error-handler.js');
+const mediaUrl = require('../../utils/media-url.js');
 
 const CERT_ROUTE = '/pages/certification/certification';
 const EDIT_ITEM_KEY = 'item_edit_id';
@@ -184,7 +185,7 @@ Page({
         conditionIndex: indexOfCondition(item.condition),
         categoryId: item.category && item.category.id ? item.category.id : null,
         images: (item.images || []).map(function (image) {
-          return { fileId: image.fileId, url: image.url, tempPath: '' };
+          return { fileId: image.fileId, url: mediaUrl.resolveMediaUrl(image.url), tempPath: '' };
         })
       });
       self.syncCategoryIndex();
@@ -301,7 +302,7 @@ Page({
           return;
         }
         const images = self.data.images.concat([
-          { fileId: String(file.fileId), url: file.url || path, tempPath: path }
+          { fileId: String(file.fileId), url: mediaUrl.resolveMediaUrl(file.url) || path, tempPath: path }
         ]);
         self.alive.setData(self, { images: images });
         next();

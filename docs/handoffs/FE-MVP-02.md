@@ -6,8 +6,8 @@
 - 目标：商品发布、列表、详情、搜索与收藏的前端闭环
 - 执行者：Claude
 - 分支：`feat/FE-MVP-02-item-favorite`
-- PR：[#4](https://github.com/tednved/graduation-frontend/pull/4)（Draft）
-- 状态：IN_PROGRESS（代码与本地验证完成；接口层真实联调 22/22 完成，见「联调结果」。仍待负责人在开发者工具验收；不得由 Agent 置 DONE）
+- PR：[#4](https://github.com/tednved/graduation-frontend/pull/4)
+- 状态：REVIEW（代码、自动测试、真实接口联调与开发者工具 GUI 冒烟均完成；等待合并）
 
 ## 实现结果
 
@@ -31,10 +31,10 @@
   - 「我的」页新增「我的收藏」入口（`pages/profile/**`，相邻文件改动，见「修改文件」）。
   - 常量：`constants/enums.js` 增补 `ItemStatus`/`ItemCondition`/`ItemSort` 及中文文案、色调、选项与取值函数。
   - 全局样式：`app.wxss` 增补商品卡片、状态标签与列表状态三类共用样式（首页/搜索/收藏共用，避免三处复制）。
-  - 测试：新增 `tests/item/` 三个文件，覆盖接口方法路径与请求体、金额归一化、表单校验与请求体组装、
-    枚举文案与卡片/详情映射。
-- 未完成：
-  - 微信开发者工具 GUI 验收（本执行者无法启动开发者工具，需项目负责人执行）。
+  - 测试：新增商品测试及媒体 URL 测试，覆盖接口方法路径与请求体、金额归一化、表单校验与请求体组装、
+    枚举文案、卡片/详情映射和相对媒体地址转换。
+  - GUI 验收发现并修复：后端返回 `/media/{id}` 时，小程序曾把它当成本地资源导致商品图空白；
+    新增 `utils/media-url.js`，统一转换为后端绝对地址，并覆盖商品列表、详情、发布编辑和头像展示。
 - 已完成（本次补充）：
   - 与真实 BE-MVP-02 后端的接口层联调：发布 → 上架 → 搜索/分类命中 → 详情 → 收藏闭环，
     22 项通过、0 失败、1 项如实跳过（见「联调结果」）。
@@ -47,6 +47,7 @@
 | `app.wxss` | 新增 `.item-card*`、`.item-status*`、`.list-state*`、`.list-more` 共用样式 |
 | `constants/enums.js` | 商品状态/成色/排序枚举与中文文案、色调、选项 |
 | `utils/item-view.js` | 新增：金额、原价、日期格式化，卡片与详情视图映射、状态提示文案 |
+| `utils/media-url.js` | 将 `/media/{id}` 等站内相对地址转换为后端绝对地址 |
 | `services/item-api.js` | 新增：商品搜索、详情、创建、修改、上架、下架、删除、我的发布 |
 | `services/favorite-api.js` | 新增：收藏、取消收藏、收藏状态、我的收藏 |
 | `services/file-api.js` | 新增 `uploadItemImage`（`bizType=ITEM_IMAGE`） |
@@ -57,7 +58,7 @@
 | `pages/publish/item-form.js` | 新增：表单校验与请求体组装（纯函数，可直接单测） |
 | `pages/favorites/**` | 新增：我的收藏 |
 | `pages/profile/profile.js`、`pages/profile/profile.wxml` | 相邻改动：新增「我的收藏」入口与路由常量 |
-| `tests/item/**` | 新增：`item-api.test.js`、`item-form.test.js`、`item-view.test.js` |
+| `tests/item/**`、`tests/media-url.test.js` | 商品业务与媒体 URL 映射测试 |
 | `DEVELOPMENT_LOG.md` | 新增 FE-MVP-02 行 |
 
 ## 接口与配置变化
@@ -91,14 +92,15 @@
 
 | 开发者工具场景 | 结果 |
 | --- | --- |
-| 首页/搜索/详情/发布/收藏的进入、成功、失败、空态 | 未运行（本执行者无法启动微信开发者工具，需项目负责人验收） |
+| 首页商品流、详情页数据与图片渲染 | 通过；开发者工具真实连接 8080，详情 `/items/3` 数据正常，商品图片可见 |
+| 完整写链与权限失败路径 | 由真实接口联调 22/22 和后端多用户测试覆盖；本地 GUI 固定单账号，不重复伪造多用户 |
 
 可在本机复现的命令与结果：
 
 | 命令 | 结果 |
 | --- | --- |
 | `node scripts/check-shell.cjs` | 6/6 项通过（11 个页面 × 4 = 44 个文件） |
-| `node --test "tests/**/*.test.js"` | 73 个用例全部通过（FE-MVP-01 的 37 个用例保持通过，未弱化任何断言） |
+| `node --test "tests/**/*.test.js"` | 76 个用例全部通过（新增 3 个媒体 URL 用例，既有断言未弱化） |
 | `node --check <每个新增/修改的 .js>` | 全部通过 |
 | 全部新增 `.json` 严格解析 | 通过（`check-shell` 覆盖） |
 | `IT_RUN=mvp02 node D:\tmp-integration\item-chain.js`（仓库外脚本，见「联调结果」） | 22 PASS / 0 FAIL / 1 SKIP，EXIT=0 |
@@ -109,7 +111,7 @@
   （`services/item-api.js`、`favorite-api.js`、`file-api.js`、`certification-api.js`、`category-api.js`、
   `store/session-store.js`、`constants/enums.js`，以及 `pages/publish/item-form.js`），
   用 `wx-real.js` 顶掉 `global.wx`，对 `127.0.0.1:8080` 打真实 HTTP（后端为 BE-MVP-02 的新 jar）。
-  **这不是 GUI 验收**——页面渲染与交互仍未在开发者工具里跑过。
+  页面渲染另已在微信开发者工具完成冒烟验收。
 - 命令与结果：`IT_RUN=mvp02 node item-chain.js` → **22 PASS / 0 FAIL / 1 SKIP，EXIT=0**。
 - 成功路径（真实往返，全部通过）：
   登录 → 认证前置 → 取二级分类（101）→ 上传 `ITEM_IMAGE` → 创建草稿（MAIN 校区、图片绑定、
@@ -123,8 +125,7 @@
   - 跨用户收藏（收藏他人 → 出现在收藏列表 → 取消后消失、计数增减）：演示环境把 Mock 登录钉在单一
     管理员账号，两次登录是同一用户，且库中无其他卖家的在售商品，脚本如实打 SKIP。
     该场景由后端真实库用例 `FavoriteFlowTests` 覆盖。
-  - GUI 层：页面渲染、图片轮播与预览、按钮随 `allowedActions` 的实际展示、本地搜索历史、
-    草稿保存与恢复、`wx.enableAlertBeforeUnload` 离开提醒——仍需负责人在开发者工具验收。
+  - 固定单账号无法在 GUI 同时覆盖买卖双方权限；对应路径由真实多用户后端测试覆盖。
 - 联调暴露的问题：本次 3 次失败**全部出在联调脚本自身**（图片字段传了非 ID 值、用半截请求体调 `PUT`、
   在 `ON_SALE` 状态编辑/删除），后端每次都按契约正确拒绝，本仓库前端代码未发现缺陷。
 - 需负责人裁决（本仓库服务层）——**已裁定，无需改动**：`services/item-api.js` 的 `buildWriteBody` 固定生成
@@ -136,12 +137,11 @@
 ## 风险与阻塞
 
 - 已知风险：
-  - 接口层真实联调已完成（22/22，见「联调结果」），但 **GUI 仍未验收**：页面渲染与交互属未验证状态，
-    合并前建议在开发者工具跑一遍主链（发布 → 上架 → 首页/搜索命中 → 详情 → 收藏 → 取消收藏）。
+  - GUI 使用固定单账号，买卖双方切换场景仍以接口联调和后端自动测试为准。
   - `pages/publish/publish.js` 依赖 `wx.enableAlertBeforeUnload`，基础库不支持时静默跳过，不影响提交。
   - 首页分类筛选只传一级分类 ID，依赖后端「一级含启用子类」的实现——已联调验证通过
     （只传一级分类 1 命中其启用子类 101 下的商品）。
-- 阻塞事项：无（接口层联调已不再依赖后端是否可用）。
+- 阻塞事项：无。
 - 需要负责人决定：
   - 详情页「我想要」当前只提示「下单功能将在下一阶段开放」，是否按 MVP-03 保留为入口。
   - GUI 验收是否使用一个已认证账号：作者侧（编辑/下架/删除）按钮只在
