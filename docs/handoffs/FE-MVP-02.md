@@ -6,7 +6,7 @@
 - 目标：商品发布、列表、详情、搜索与收藏的前端闭环
 - 执行者：Claude
 - 分支：`feat/FE-MVP-02-item-favorite`
-- PR：见本文件所在分支的 Draft PR（创建后回填）
+- PR：[#4](https://github.com/tednved/graduation-frontend/pull/4)（Draft）
 - 状态：IN_PROGRESS（代码与本地验证完成，等待真实 BE-MVP-02 联调与项目负责人验收；不得由 Agent 置 DONE）
 
 ## 实现结果
