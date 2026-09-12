@@ -6,8 +6,8 @@
 - 目标：一次完成请求会话、登录资料、MANUAL 认证与分类页面，形成可运行闭环
 - 执行者：Claude
 - 分支：`feat/FE-MVP-01-core`
-- PR：[#3](https://github.com/tednved/graduation-frontend/pull/3)（Draft）
-- 状态：IN_PROGRESS（代码与 Node 测试完成，微信开发者工具 GUI 验收与真实后端联调未执行）
+- PR：[#3](https://github.com/tednved/graduation-frontend/pull/3)（已合并为 `83bcf67b`）
+- 状态：DONE（代码审查与 Node 测试通过，PR #3 已合并；整包 GUI 验收由项目负责人在合并版 `main` 上执行）
 
 ## 实现结果
 
