@@ -7,7 +7,7 @@
 - 执行者：Claude
 - 分支：`feat/FE-MVP-02-item-favorite`
 - PR：[#4](https://github.com/tednved/graduation-frontend/pull/4)
-- 状态：REVIEW（代码、自动测试、真实接口联调与开发者工具 GUI 冒烟均完成；等待合并）
+- 状态：DONE（PR #4 已 squash 合并为 `7e283cf`；前端 76/76、真实接口联调 22/22 与开发者工具 GUI 冒烟通过）
 
 ## 实现结果
 
