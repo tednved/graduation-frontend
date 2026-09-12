@@ -21,7 +21,7 @@
 | PM-03 | `docs/PM-03-collaboration-visibility` | Codex | DONE | 2026-09-06 | [#2](https://github.com/tednved/graduation-frontend/pull/2) | `docs/handoffs/PM-03.md` | 无契约变化 | 2026-09-10 |
 | FE-01 | `feat/FE-01-miniprogram-shell` | Claude | DONE | 2026-09-10 | [#1](https://github.com/tednved/graduation-frontend/pull/1) | `docs/handoffs/FE-01.md` | 无契约变化 | 2026-09-12 |
 | FE-MVP-01 | `feat/FE-MVP-01-core` | Claude | DONE | 2026-09-11 | [#3](https://github.com/tednved/graduation-frontend/pull/3) | `docs/handoffs/FE-MVP-01.md` | API-01 `e15baa77` | 2026-09-12 |
-| FE-MVP-02 | `feat/FE-MVP-02-item-favorite` | Claude | IN_PROGRESS | 2026-09-12 | [#4](https://github.com/tednved/graduation-frontend/pull/4) | `docs/handoffs/FE-MVP-02.md` | API-01 `e15baa77` | 2026-09-12 |
+| FE-MVP-02 | `feat/FE-MVP-02-item-favorite` | Claude | IN_PROGRESS | 2026-09-12 | [#4](https://github.com/tednved/graduation-frontend/pull/4) | `docs/handoffs/FE-MVP-02.md` | API-01 `e15baa77`；BE-MVP-02 另将 `PUT /items/{id}` 裁定为全量替换（本仓调用方式已符合，无需改动） | 2026-09-12 |
 
 ## 合并后更新要求
 
