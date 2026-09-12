@@ -1,5 +1,36 @@
 <!--pages/category/category.wxml-->
-<view class="page">
-  <view class="page__title">分类</view>
-  <view class="page__hint">页面建设中</view>
+<view class="cat">
+  <view class="cat__state" wx:if="{{loading && categories.length === 0}}">正在加载分类…</view>
+
+  <view class="cat__state" wx:elif="{{failed && categories.length === 0}}">
+    <view>分类加载失败，请检查网络</view>
+    <button class="cat__retry" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <view class="cat__state" wx:elif="{{categories.length === 0}}">暂无可用分类</view>
+
+  <view class="cat__body" wx:else>
+    <scroll-view class="cat__side" scroll-y>
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="cat__side-item {{item.id === activeId ? 'cat__side-item--active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onSelectParent"
+      >{{item.name}}</view>
+    </scroll-view>
+
+    <scroll-view class="cat__main" scroll-y>
+      <view class="cat__main-title">{{activeName}}</view>
+      <view class="cat__chips" wx:if="{{activeChildren.length > 0}}">
+        <view
+          wx:for="{{activeChildren}}"
+          wx:key="id"
+          class="cat__chip"
+          bindtap="onTapLeaf"
+        >{{item.name}}</view>
+      </view>
+      <view class="cat__empty" wx:else>该分类下暂无子分类</view>
+    </scroll-view>
+  </view>
 </view>

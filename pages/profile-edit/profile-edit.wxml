@@ -1,0 +1,49 @@
+<!--pages/profile-edit/profile-edit.wxml-->
+<view class="edit">
+  <view class="edit__loading" wx:if="{{loading}}">正在加载资料…</view>
+
+  <block wx:else>
+    <view class="edit__avatar-row">
+      <view class="edit__label">头像</view>
+      <view class="edit__avatar-wrap" bindtap="onChooseAvatar">
+        <image class="edit__avatar" wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill" />
+        <view class="edit__avatar edit__avatar--empty" wx:else>选择</view>
+        <view class="edit__avatar-hint">{{uploading ? '上传中…' : '点击更换'}}</view>
+      </view>
+      <view class="edit__clear" wx:if="{{avatarUrl}}" catchtap="onClearAvatar">移除</view>
+    </view>
+
+    <view class="edit__field">
+      <view class="edit__label">昵称</view>
+      <input
+        class="edit__input"
+        value="{{nickname}}"
+        maxlength="20"
+        placeholder="请输入昵称"
+        bindinput="onNicknameInput"
+      />
+    </view>
+
+    <view class="edit__field">
+      <view class="edit__label">手机号</view>
+      <input
+        class="edit__input"
+        type="number"
+        value="{{phone}}"
+        maxlength="11"
+        placeholder="选填，用于交易联系"
+        bindinput="onPhoneInput"
+      />
+    </view>
+
+    <view class="edit__note">校区由系统自动绑定，暂不支持修改。</view>
+
+    <button
+      class="edit__save"
+      type="primary"
+      loading="{{submitting}}"
+      disabled="{{submitting || uploading}}"
+      bindtap="onSave"
+    >保存</button>
+  </block>
+</view>

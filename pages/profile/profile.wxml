@@ -1,5 +1,51 @@
 <!--pages/profile/profile.wxml-->
-<view class="page">
-  <view class="page__title">我的</view>
-  <view class="page__hint">页面建设中</view>
+<view class="me">
+  <view class="me__empty" wx:if="{{!loggedIn}}">
+    <view class="me__empty-title">还没有登录</view>
+    <view class="me__empty-desc">登录后可编辑资料、提交校园认证</view>
+    <button class="me__login" type="primary" bindtap="onGoLogin">微信登录</button>
+  </view>
+
+  <block wx:else>
+    <view class="me__card">
+      <image class="me__avatar" wx:if="{{profile.avatarUrl}}" src="{{profile.avatarUrl}}" mode="aspectFill" />
+      <view class="me__avatar me__avatar--empty" wx:else>{{initial}}</view>
+      <view class="me__ident">
+        <view class="me__name">{{profile.nickname}}</view>
+        <view class="me__badge me__badge--{{certTone}}">{{certLabel}}</view>
+      </view>
+    </view>
+
+    <view class="me__rows">
+      <view class="me__row">
+        <text class="me__label">手机号</text>
+        <text class="me__value">{{profile.phone ? profile.phone : '未填写'}}</text>
+      </view>
+      <view class="me__row">
+        <text class="me__label">校区</text>
+        <text class="me__value">{{profile.campus ? profile.campus.name : '—'}}</text>
+      </view>
+      <view class="me__row">
+        <text class="me__label">信用评分</text>
+        <text class="me__value">{{profile.averageRating}}（{{profile.reviewCount}} 次评价）</text>
+      </view>
+      <view class="me__row">
+        <text class="me__label">注册时间</text>
+        <text class="me__value">{{joinedAt}}</text>
+      </view>
+    </view>
+
+    <view class="me__actions">
+      <button class="me__action" bindtap="onEditProfile">编辑资料</button>
+      <button class="me__action" bindtap="onGoCertification">校园认证</button>
+      <button
+        class="me__action me__action--danger"
+        loading="{{submitting}}"
+        disabled="{{submitting}}"
+        bindtap="onLogout"
+      >退出登录</button>
+    </view>
+
+    <view class="me__hint" wx:if="{{loading}}">正在刷新…</view>
+  </block>
 </view>

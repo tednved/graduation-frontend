@@ -1,0 +1,33 @@
+/* pages/login/login.wxss */
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 160rpx 60rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.login__brand {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.login__desc {
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #999999;
+  text-align: center;
+}
+
+.login__button {
+  width: 100%;
+  margin-top: 120rpx;
+}
+
+.login__back {
+  margin-top: 40rpx;
+  font-size: 28rpx;
+  color: #07c160;
+}

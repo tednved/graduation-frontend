@@ -1,0 +1,68 @@
+<!--pages/certification/certification.wxml-->
+<view class="cert">
+  <view class="cert__loading" wx:if="{{loading}}">正在加载认证状态…</view>
+
+  <block wx:else>
+    <view class="cert__status cert__status--{{statusTone}}">
+      <view class="cert__status-label">{{statusLabel}}</view>
+      <view class="cert__status-desc" wx:if="{{status === 'NOT_SUBMITTED'}}">提交真实姓名与学号，由管理员人工审核</view>
+      <view class="cert__status-desc" wx:elif="{{status === 'PENDING'}}">申请已提交，请等待管理员审核</view>
+      <view class="cert__status-desc" wx:elif="{{status === 'APPROVED'}}">认证通过，可以发布商品了</view>
+      <view class="cert__status-desc" wx:else>{{rejectReason ? rejectReason : '认证未通过，可修改后重新提交'}}</view>
+    </view>
+
+    <view class="cert__detail" wx:if="{{certification}}">
+      <view class="cert__row">
+        <text class="cert__label">姓名</text>
+        <text class="cert__value">{{certification.realNameMasked ? certification.realNameMasked : '—'}}</text>
+      </view>
+      <view class="cert__row">
+        <text class="cert__label">学号</text>
+        <text class="cert__value">{{certification.studentNoMasked ? certification.studentNoMasked : '—'}}</text>
+      </view>
+      <view class="cert__row">
+        <text class="cert__label">提交时间</text>
+        <text class="cert__value">{{submittedAt}}</text>
+      </view>
+      <view class="cert__row" wx:if="{{reviewedAt}}">
+        <text class="cert__label">审核时间</text>
+        <text class="cert__value">{{reviewedAt}}</text>
+      </view>
+    </view>
+
+    <view class="cert__form" wx:if="{{status === 'NOT_SUBMITTED' || status === 'REJECTED'}}">
+      <view class="cert__field">
+        <view class="cert__label">真实姓名</view>
+        <input
+          class="cert__input"
+          value="{{realName}}"
+          maxlength="30"
+          placeholder="请输入真实姓名"
+          bindinput="onRealNameInput"
+        />
+      </view>
+      <view class="cert__field">
+        <view class="cert__label">学号</view>
+        <input
+          class="cert__input"
+          value="{{studentNo}}"
+          maxlength="32"
+          placeholder="请输入学号"
+          bindinput="onStudentNoInput"
+        />
+      </view>
+
+      <view class="cert__note">姓名与学号仅用于人工审核，服务端只保存脱敏结果。</view>
+
+      <button
+        class="cert__submit"
+        type="primary"
+        loading="{{submitting}}"
+        disabled="{{submitting}}"
+        bindtap="onSubmit"
+      >提交认证</button>
+    </view>
+
+    <view class="cert__refresh" wx:else>下拉可刷新审核状态</view>
+  </block>
+</view>
