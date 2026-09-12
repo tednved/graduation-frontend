@@ -7,7 +7,7 @@
 - 执行者：Claude
 - 分支：`feat/FE-MVP-02-item-favorite`
 - PR：[#4](https://github.com/tednved/graduation-frontend/pull/4)（Draft）
-- 状态：IN_PROGRESS（代码与本地验证完成，等待真实 BE-MVP-02 联调与项目负责人验收；不得由 Agent 置 DONE）
+- 状态：IN_PROGRESS（代码与本地验证完成；接口层真实联调 22/22 完成，见「联调结果」。仍待负责人在开发者工具验收；不得由 Agent 置 DONE）
 
 ## 实现结果
 
@@ -34,9 +34,10 @@
   - 测试：新增 `tests/item/` 三个文件，覆盖接口方法路径与请求体、金额归一化、表单校验与请求体组装、
     枚举文案与卡片/详情映射。
 - 未完成：
-  - 与真实 BE-MVP-02 后端的联调（后端在同里程碑并行实施）。必须联调的主链：
-    发布 → 上架 → 首页/搜索命中 → 详情 → 收藏 → 取消收藏。
   - 微信开发者工具 GUI 验收（本执行者无法启动开发者工具，需项目负责人执行）。
+- 已完成（本次补充）：
+  - 与真实 BE-MVP-02 后端的接口层联调：发布 → 上架 → 搜索/分类命中 → 详情 → 收藏闭环，
+    22 项通过、0 失败、1 项如实跳过（见「联调结果」）。
 
 ## 修改文件
 
@@ -97,27 +98,53 @@
 | `node --test "tests/**/*.test.js"` | 73 个用例全部通过（FE-MVP-01 的 37 个用例保持通过，未弱化任何断言） |
 | `node --check <每个新增/修改的 .js>` | 全部通过 |
 | 全部新增 `.json` 严格解析 | 通过（`check-shell` 覆盖） |
+| `IT_RUN=mvp02 node D:\tmp-integration\item-chain.js`（仓库外脚本，见「联调结果」） | 22 PASS / 0 FAIL / 1 SKIP，EXIT=0 |
 
 ## 联调结果
 
-- 后端环境：未联调（BE-MVP-02 尚在实施中）
-- 成功路径：未联调；契约级断言已覆盖搜索/详情/创建/修改/上架/下架/删除/我的发布/收藏四个接口的方法、路径与请求体
-- 失败路径：未联调；页面已按 `ITEM_NOT_FOUND`、`ITEM_SELF_OPERATION`、`ITEM_NOT_EDITABLE`、
-  `USER_CERTIFICATION_REQUIRED` 等错误码走统一错误出口，但未对真实响应验证
-- 尚未联调内容：全部真实 HTTP 往返、图片上传与 `ITEM_IMAGE` 绑定、乐观锁 `version` 冲突、
-  收藏计数增减、他人商品与本人商品下的按钮差异
+- 方式：仓库外脚本 `D:\tmp-integration\item-chain.js` 在 Node 里 `require` 本仓库的真实模块
+  （`services/item-api.js`、`favorite-api.js`、`file-api.js`、`certification-api.js`、`category-api.js`、
+  `store/session-store.js`、`constants/enums.js`，以及 `pages/publish/item-form.js`），
+  用 `wx-real.js` 顶掉 `global.wx`，对 `127.0.0.1:8080` 打真实 HTTP（后端为 BE-MVP-02 的新 jar）。
+  **这不是 GUI 验收**——页面渲染与交互仍未在开发者工具里跑过。
+- 命令与结果：`IT_RUN=mvp02 node item-chain.js` → **22 PASS / 0 FAIL / 1 SKIP，EXIT=0**。
+- 成功路径（真实往返，全部通过）：
+  登录 → 认证前置 → 取二级分类（101）→ 上传 `ITEM_IMAGE` → 创建草稿（MAIN 校区、图片绑定、
+  金额两位小数）→ 草稿公开搜索不可见 → 上架 → 上架响应 `version` 与详情回读一致 →
+  下架 → **用下架响应的 `version` 立刻编辑成功且 `version` 增长** → 重新上架 →
+  关键词搜索命中 → 二级分类筛选命中 → **只传一级分类展开到启用子类并命中** →
+  匿名详情 `isOwner=false`/`favorited=null` → 浏览量自增 → 我的发布 → 下架后删除 204 → 删除后搜索不再命中。
+- 失败路径（已核对真实响应）：收藏自己商品 409 `ITEM_SELF_OPERATION`；
+  在 `ON_SALE` 状态编辑/删除 409 `ITEM_NOT_EDITABLE`。
+- 尚未覆盖：
+  - 跨用户收藏（收藏他人 → 出现在收藏列表 → 取消后消失、计数增减）：演示环境把 Mock 登录钉在单一
+    管理员账号，两次登录是同一用户，且库中无其他卖家的在售商品，脚本如实打 SKIP。
+    该场景由后端真实库用例 `FavoriteFlowTests` 覆盖。
+  - GUI 层：页面渲染、图片轮播与预览、按钮随 `allowedActions` 的实际展示、本地搜索历史、
+    草稿保存与恢复、`wx.enableAlertBeforeUnload` 离开提醒——仍需负责人在开发者工具验收。
+- 联调暴露的问题：本次 3 次失败**全部出在联调脚本自身**（图片字段传了非 ID 值、用半截请求体调 `PUT`、
+  在 `ON_SALE` 状态编辑/删除），后端每次都按契约正确拒绝，本仓库前端代码未发现缺陷。
+- 需负责人裁决（本仓库服务层）：`services/item-api.js` 的 `buildWriteBody` 固定生成
+  `title`/`description`/`price`/`condition`/`categoryId`/`imageFileIds` 全部键，因此经服务层
+  **无法表达契约允许的「省略字段即保留原值」**——缺省会被补齐成 `price: null` 或 `imageFileIds: []`
+  并被后端判为非法。真实页面始终提交完整表单（`validateItemForm` 先拦截），故当前不可见；
+  是否改成「只发送调用方真正提供的字段」，请负责人决定。
 
 ## 风险与阻塞
 
 - 已知风险：
-  - 本 PR 未经一次真实联调，属未验证状态；合并前至少需要一次真实 BE-MVP-02 联调（发布→上架→首页/搜索命中→详情→收藏→取消）。
+  - 接口层真实联调已完成（22/22，见「联调结果」），但 **GUI 仍未验收**：页面渲染与交互属未验证状态，
+    合并前建议在开发者工具跑一遍主链（发布 → 上架 → 首页/搜索命中 → 详情 → 收藏 → 取消收藏）。
   - `pages/publish/publish.js` 依赖 `wx.enableAlertBeforeUnload`，基础库不支持时静默跳过，不影响提交。
-  - 首页分类筛选只传一级分类 ID，依赖后端「一级含启用子类」的实现；契约已如此定义，但未联调验证。
-- 阻塞事项：真实联调依赖 BE-MVP-02 可用。
+  - 首页分类筛选只传一级分类 ID，依赖后端「一级含启用子类」的实现——已联调验证通过
+    （只传一级分类 1 命中其启用子类 101 下的商品）。
+- 阻塞事项：无（接口层联调已不再依赖后端是否可用）。
 - 需要负责人决定：
   - 详情页「我想要」当前只提示「下单功能将在下一阶段开放」，是否按 MVP-03 保留为入口。
-  - 是否需要在联调时用一个已认证账号，以便覆盖作者侧（编辑/下架/删除）按钮；本机 Mock 固定为单一 ADMIN 账号，
-    GUI 只能演示「收藏自己发布的商品被拒」。
+  - GUI 验收是否使用一个已认证账号：作者侧（编辑/下架/删除）按钮只在
+    `certificationStatus === APPROVED` 时出现；接口层联调已用该账号（自行提交认证并审核通过）
+    覆盖这些动作，但账号未认证时 GUI 里看不到这些按钮。
+  - `buildWriteBody` 是否支持真正的局部更新（见「联调结果」最后一条）。
 
 ## 下一任务输入
 
