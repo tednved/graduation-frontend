@@ -64,6 +64,9 @@
 
 - 依赖后端任务：BE-MVP-02（同里程碑并行实施）
 - OpenAPI 版本：API-01 `e15baa77`（单校区冻结版）；本任务未修改契约，也未使用契约外的字段
+- 契约变更（由后端在 2026-09-12 裁定并落地）：`PUT /items/{id}` 明确为**全量替换**，全部业务字段必填。
+  本仓库的调用方式（`buildPayload` / `buildWriteBody` 始终提交全量、`originalPrice` 恒以字符串或 `null` 出现）
+  本就符合，**未改动任何代码**，见「联调结果」最后一条
 - 新增 service：`item-api`、`favorite-api`；`file-api` 增加一个方法
 - 只读文件未改动：`services/request.js`、`store/session-store.js`
 - `app.json`/env/constants 变化：`app.json` 追加三个非 Tab 页面；无新增配置项
@@ -124,11 +127,11 @@
     草稿保存与恢复、`wx.enableAlertBeforeUnload` 离开提醒——仍需负责人在开发者工具验收。
 - 联调暴露的问题：本次 3 次失败**全部出在联调脚本自身**（图片字段传了非 ID 值、用半截请求体调 `PUT`、
   在 `ON_SALE` 状态编辑/删除），后端每次都按契约正确拒绝，本仓库前端代码未发现缺陷。
-- 需负责人裁决（本仓库服务层）：`services/item-api.js` 的 `buildWriteBody` 固定生成
-  `title`/`description`/`price`/`condition`/`categoryId`/`imageFileIds` 全部键，因此经服务层
-  **无法表达契约允许的「省略字段即保留原值」**——缺省会被补齐成 `price: null` 或 `imageFileIds: []`
-  并被后端判为非法。真实页面始终提交完整表单（`validateItemForm` 先拦截），故当前不可见；
-  是否改成「只发送调用方真正提供的字段」，请负责人决定。
+- 需负责人裁决（本仓库服务层）——**已裁定，无需改动**：`services/item-api.js` 的 `buildWriteBody` 固定生成
+  `title`/`description`/`price`/`condition`/`categoryId`/`imageFileIds` 全部键，其中 `originalPrice` 永远以
+  「两位小数字符串或 `null`」出现。项目负责人 2026-09-12 裁定 `PUT /items/{id}` 为**全量替换**
+  （后端已按此改契约、实现与测试），因此这种「总是发全量」的行为正是契约要求，
+  原先的「无法表达省略即保留原值」不再是问题。本仓库**未改任何代码**。
 
 ## 风险与阻塞
 
@@ -144,7 +147,6 @@
   - GUI 验收是否使用一个已认证账号：作者侧（编辑/下架/删除）按钮只在
     `certificationStatus === APPROVED` 时出现；接口层联调已用该账号（自行提交认证并审核通过）
     覆盖这些动作，但账号未认证时 GUI 里看不到这些按钮。
-  - `buildWriteBody` 是否支持真正的局部更新（见「联调结果」最后一条）。
 
 ## 下一任务输入
 
