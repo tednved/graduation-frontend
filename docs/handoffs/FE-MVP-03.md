@@ -6,8 +6,8 @@
 - 目标：交易、评价与消息的前端闭环（下单、买入/卖出订单、状态操作、评价、消息与未读红点、管理员控制台）
 - 执行者：Claude
 - 分支：`feat/FE-MVP-03-trade`
-- PR：[#5](https://github.com/tednved/graduation-frontend/pull/5)（Draft）
-- 状态：REVIEW（代码与自动测试完成；审查意见 1 已修复，见「审查意见修复」；真实联调与 GUI 冒烟待授权启动后端后执行）
+- PR：[#5](https://github.com/tednved/graduation-frontend/pull/5)（已合并为 `02e8a22`）
+- 状态：DONE（静态检查 6/6、Node 137/137；负责人确认 GUI 运行验收完成）
 
 ## 实现结果
 

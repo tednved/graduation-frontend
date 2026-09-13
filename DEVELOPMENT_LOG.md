@@ -22,7 +22,7 @@
 | FE-01 | `feat/FE-01-miniprogram-shell` | Claude | DONE | 2026-09-10 | [#1](https://github.com/tednved/graduation-frontend/pull/1) | `docs/handoffs/FE-01.md` | 无契约变化 | 2026-09-12 |
 | FE-MVP-01 | `feat/FE-MVP-01-core` | Claude | DONE | 2026-09-11 | [#3](https://github.com/tednved/graduation-frontend/pull/3) | `docs/handoffs/FE-MVP-01.md` | API-01 `e15baa77` | 2026-09-12 |
 | FE-MVP-02 | `feat/FE-MVP-02-item-favorite` | Claude | DONE | 2026-09-12 | [#4](https://github.com/tednved/graduation-frontend/pull/4) | `docs/handoffs/FE-MVP-02.md` | 合并提交 `7e283cf`；前端 76/76、联调 22/22、GUI 冒烟通过 | 2026-09-12 |
-| FE-MVP-03 | `feat/FE-MVP-03-trade` | Claude | REVIEW | 2026-09-13 | [#5](https://github.com/tednved/graduation-frontend/pull/5) | `docs/handoffs/FE-MVP-03.md` | OpenAPI API-01 `e15baa77`（路径 1221–2135、组件 2392–3560）；静态检查 6/6、Node 137/137；已按审查意见补管理员控制台（`pages/admin`、`services/admin-api.js`）；真实联调与 GUI 冒烟待授权启动后端后执行 | 2026-09-13 |
+| FE-MVP-03 | `feat/FE-MVP-03-trade` | Claude | DONE | 2026-09-13 | [#5](https://github.com/tednved/graduation-frontend/pull/5) | `docs/handoffs/FE-MVP-03.md` | 合并提交 `02e8a22`；静态检查 6/6、Node 137/137、负责人 GUI 运行验收通过 | 2026-09-13 |
 
 ## 合并后更新要求
 
