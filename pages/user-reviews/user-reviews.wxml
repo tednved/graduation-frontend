@@ -1,0 +1,81 @@
+<!--pages/user-reviews/user-reviews.wxml-->
+<view class="reviews">
+  <view class="list-state" wx:if="{{invalid}}">
+    <view class="list-state__title">{{invalidReason}}</view>
+    <view class="list-state__desc">可能该账号已不可访问</view>
+  </view>
+
+  <block wx:else>
+    <view class="reviews__credit" wx:if="{{credit}}">
+      <view class="reviews__score">
+        <text class="reviews__score-value">{{credit.averageText}}</text>
+        <text class="reviews__score-label">平均分</text>
+      </view>
+      <view class="reviews__dist">
+        <view class="reviews__dist-row" wx:for="{{credit.distribution}}" wx:key="star">
+          <text class="reviews__dist-star">{{item.star}} 星</text>
+          <view class="reviews__dist-bar">
+            <view class="reviews__dist-fill" style="width: {{item.percent}}%"></view>
+          </view>
+          <text class="reviews__dist-count">{{item.count}}</text>
+        </view>
+      </view>
+      <view class="reviews__count">共 {{credit.reviewCount}} 条评价</view>
+    </view>
+
+    <view class="reviews__filter">
+      <picker
+        mode="selector"
+        range="{{ratingOptions}}"
+        range-key="label"
+        value="{{ratingIndex}}"
+        bindchange="onRatingChange"
+      >
+        <view class="reviews__filter-value">{{ratingOptions[ratingIndex].label}} ▾</view>
+      </picker>
+    </view>
+
+    <view class="list-state" wx:if="{{loading}}">
+      <view class="list-state__desc">加载中…</view>
+    </view>
+
+    <view class="list-state" wx:elif="{{failed}}">
+      <view class="list-state__title">评价加载失败</view>
+      <view class="list-state__desc">请检查网络后重试</view>
+      <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+    </view>
+
+    <view class="list-state" wx:elif="{{reviews.length === 0}}">
+      <view class="list-state__title">还没有评价</view>
+      <view class="list-state__desc">完成交易后双方可以互相评价</view>
+    </view>
+
+    <block wx:else>
+      <view class="reviews__list">
+        <view class="reviews__item" wx:for="{{reviews}}" wx:key="id">
+          <view class="reviews__item-head">
+            <image class="reviews__avatar" wx:if="{{item.reviewerAvatarUrl}}" src="{{item.reviewerAvatarUrl}}" mode="aspectFill" />
+            <view class="reviews__avatar reviews__avatar--empty" wx:else>{{item.reviewerInitial}}</view>
+            <view class="reviews__item-ident">
+              <view class="reviews__item-name">{{item.reviewerName}}</view>
+              <view class="reviews__item-stars">
+                <text
+                  class="reviews__star {{s.on ? 'reviews__star--on' : ''}}"
+                  wx:for="{{item.stars}}"
+                  wx:key="star"
+                  wx:for-item="s"
+                >★</text>
+                <text class="reviews__item-rating">{{item.ratingText}}</text>
+              </view>
+            </view>
+            <text class="reviews__item-date">{{item.createdDate}}</text>
+          </view>
+          <view class="reviews__item-content" wx:if="{{item.content}}">{{item.content}}</view>
+        </view>
+      </view>
+
+      <view class="list-more" wx:if="{{loadingMore}}">加载中…</view>
+      <view class="list-more" wx:elif="{{!hasNext}}">没有更多了</view>
+    </block>
+  </block>
+</view>

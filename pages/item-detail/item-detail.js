@@ -7,18 +7,29 @@
 // 编辑入口：publish 是 TabBar 页，wx.switchTab 不能带参数，
 // 所以先把商品 ID 写入本地存储，由 publish 页 onShow 时取走。
 //
-// 下单（BUY）属于 MVP-03，本页只保留入口提示，不发起任何订单请求。
+// 下单（BUY）：卖家接单前不落任何本地状态，只有后端 201/200 返回订单详情后才跳订单详情页。
+//
+// 幂等键 clientRequestId 只在用户点击「我想要」时生成一次：
+//   - 网络失败（响应未到达，订单可能已经创建）保留同一个键，重试是同键幂等重放，不会重复下单；
+//   - HTTP 层拒绝（订单肯定没创建）才丢弃重来，避免同键换商品触发 ORDER_DUPLICATE_REQUEST。
 
 const itemApi = require('../../services/item-api.js');
 const favoriteApi = require('../../services/favorite-api.js');
+const orderApi = require('../../services/order-api.js');
 const store = require('../../store/session-store.js');
+const enums = require('../../constants/enums.js');
+const errors = require('../../constants/error-codes.js');
 const itemView = require('../../utils/item-view.js');
+const orderView = require('../../utils/order-view.js');
 const pageGuard = require('../../utils/page-guard.js');
 const errorHandler = require('../../utils/error-handler.js');
 
 const EDIT_ITEM_KEY = 'item_edit_id';
 const PUBLISH_TAB = '/pages/publish/publish';
+const CERT_ROUTE = '/pages/certification/certification';
 const INVALID_CODES = ['ITEM_NOT_FOUND', 'ITEM_UNAVAILABLE'];
+// 这些错误意味着商品已不可下单，刷新详情让 allowedActions 反映最新状态。
+const REFRESH_CODES = ['ITEM_CONCURRENTLY_RESERVED', 'ITEM_NOT_AVAILABLE', 'ITEM_SELF_PURCHASE'];
 
 Page({
   data: {
@@ -168,8 +179,55 @@ Page({
       return;
     }
     if (action === 'BUY') {
-      errorHandler.showToast('下单功能将在下一阶段开放');
+      this.startOrder();
     }
+  },
+
+  // ---- 下单 ----------------------------------------------------------------
+
+  startOrder: function () {
+    const self = this;
+    if (this.data.acting) return;
+    const session = store.getSession();
+    if (!session) {
+      errorHandler.requireLogin();
+      return;
+    }
+    // 未认证下单直接引导认证：后端也会返回 USER_CERTIFICATION_REQUIRED，这里提前拦住少一次往返。
+    if (session.certificationStatus !== enums.CertificationStatus.APPROVED) {
+      wx.showModal({
+        title: '需要校园认证',
+        content: '下单前需要先完成校园认证，是否现在去认证？',
+        confirmText: '去认证',
+        success: function (res) {
+          if (res.confirm) wx.navigateTo({ url: CERT_ROUTE });
+        }
+      });
+      return;
+    }
+    // 作者不能购买自己的商品；以后端返回的 isOwner 为准，这里只做提前提示。
+    if (this.data.item && this.data.item.isOwner) {
+      errorHandler.showToast('不能购买自己发布的商品');
+      return;
+    }
+
+    const clientRequestId = this.pendingClientRequestId || orderApi.newClientRequestId();
+    this.pendingClientRequestId = clientRequestId;
+    this.alive.setData(this, { acting: true });
+    orderApi.create(this.itemId, clientRequestId).then(function (detail) {
+      // 下单成功后幂等键完成使命；再点一次是新的下单意图，应当是新订单。
+      self.pendingClientRequestId = null;
+      self.alive.setData(self, { acting: false });
+      errorHandler.showToast('下单成功，等待卖家接单');
+      wx.navigateTo({ url: orderView.orderDetailRoute(detail && detail.id ? detail.id : '') });
+    }, function (error) {
+      const code = error && error.code;
+      // 网络失败保留原键：服务端可能已经建单，换键会真的重复下单。
+      if (code !== errors.NETWORK_ERROR) self.pendingClientRequestId = null;
+      self.alive.setData(self, { acting: false });
+      errorHandler.handleError(error);
+      if (REFRESH_CODES.indexOf(code) >= 0) self.loadDetail();
+    });
   },
 
   startEdit: function () {

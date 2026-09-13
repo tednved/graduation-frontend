@@ -1,20 +1,99 @@
 /* pages/messages/messages.wxss */
-.page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 80rpx 40rpx;
+.messages {
+  padding-bottom: 40rpx;
 }
 
-.page__title {
-  font-size: 44rpx;
+.messages__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  background-color: #ffffff;
+}
+
+.messages__filter {
+  font-size: 26rpx;
+  color: #576b95;
+}
+
+.messages__filter--on {
+  color: #07c160;
   font-weight: 600;
 }
 
-.page__hint {
-  margin-top: 20rpx;
-  font-size: 28rpx;
+.messages__read-all {
+  font-size: 26rpx;
   color: #999999;
+}
+
+.messages__read-all--busy {
+  color: #b0b0b0;
+}
+
+.messages__list {
+  padding: 20rpx 24rpx 0;
+}
+
+.msg {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.msg__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.msg__time {
+  font-size: 24rpx;
+  color: #b0b0b0;
+}
+
+.msg__title {
+  margin-top: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* 未读标记：小红点 + 加粗标题，不改变整条消息的可点区域。 */
+.msg__dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background-color: #fa5151;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.msg--unread {
+  border-left: 6rpx solid #fa5151;
+}
+
+.msg__content {
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+  word-break: break-all;
+}
+
+.msg__foot {
+  margin-top: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.msg__route {
+  font-size: 24rpx;
+  color: #576b95;
+}
+
+.msg__marking {
+  font-size: 24rpx;
+  color: #b0b0b0;
 }

@@ -1,0 +1,155 @@
+/* pages/user-reviews/user-reviews.wxss */
+.reviews {
+  padding-bottom: 40rpx;
+}
+
+.reviews__credit {
+  background-color: #ffffff;
+  padding: 24rpx;
+}
+
+.reviews__score {
+  display: flex;
+  align-items: baseline;
+}
+
+.reviews__score-value {
+  font-size: 56rpx;
+  font-weight: 600;
+  color: #fa9d3b;
+}
+
+.reviews__score-label {
+  margin-left: 16rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.reviews__dist {
+  margin-top: 16rpx;
+}
+
+.reviews__dist-row {
+  display: flex;
+  align-items: center;
+  padding: 6rpx 0;
+}
+
+.reviews__dist-star {
+  width: 80rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.reviews__dist-bar {
+  flex: 1;
+  height: 14rpx;
+  border-radius: 8rpx;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
+
+.reviews__dist-fill {
+  height: 100%;
+  background-color: #fa9d3b;
+}
+
+.reviews__dist-count {
+  width: 70rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.reviews__count {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #b0b0b0;
+}
+
+.reviews__filter {
+  padding: 16rpx 24rpx;
+  background-color: #ffffff;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.reviews__filter-value {
+  font-size: 26rpx;
+  color: #576b95;
+}
+
+.reviews__list {
+  padding: 20rpx 24rpx 0;
+}
+
+.reviews__item {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.reviews__item-head {
+  display: flex;
+  align-items: center;
+}
+
+.reviews__avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background-color: #f5f6f8;
+}
+
+.reviews__avatar--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+  font-size: 26rpx;
+}
+
+.reviews__item-ident {
+  flex: 1;
+  margin-left: 20rpx;
+  min-width: 0;
+}
+
+.reviews__item-name {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.reviews__item-stars {
+  display: flex;
+  align-items: center;
+}
+
+.reviews__star {
+  font-size: 26rpx;
+  color: #e0e0e0;
+  padding-right: 4rpx;
+}
+
+.reviews__star--on {
+  color: #fa9d3b;
+}
+
+.reviews__item-rating {
+  margin-left: 12rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.reviews__item-date {
+  font-size: 24rpx;
+  color: #b0b0b0;
+}
+
+.reviews__item-content {
+  margin-top: 16rpx;
+  font-size: 28rpx;
+  color: #333333;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

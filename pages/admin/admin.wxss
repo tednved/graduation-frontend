@@ -1,0 +1,135 @@
+/* pages/admin/admin.wxss
+   紧凑管理台：四个区域共用一个列表骨架，样式只描述条目本身。 */
+
+.admin {
+  padding: 20rpx 24rpx 60rpx;
+}
+
+.admin__tabs {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  margin-bottom: 20rpx;
+}
+
+.admin__tab {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  font-size: 26rpx;
+  color: #666666;
+  border-radius: 12rpx;
+}
+
+.admin__tab--on {
+  background-color: #e8f8ee;
+  color: #07c160;
+  font-weight: 600;
+}
+
+.admin__filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16rpx;
+}
+
+.admin__input {
+  flex: 1;
+  min-width: 240rpx;
+  height: 64rpx;
+  padding: 0 20rpx;
+  margin: 0 12rpx 12rpx 0;
+  background-color: #ffffff;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+}
+
+.admin__search {
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  margin: 0 12rpx 12rpx 0;
+  background-color: #07c160;
+  color: #ffffff;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+}
+
+.admin__picker {
+  margin: 0 12rpx 12rpx 0;
+}
+
+.admin__picker-value {
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 24rpx;
+  background-color: #ffffff;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.admin-card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.admin-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-card__title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1f1f1f;
+  flex: 1;
+  margin-right: 16rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-card__muted {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.admin-card__meta {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.admin-card__meta--dim {
+  color: #b0b0b0;
+}
+
+.admin-card__ops {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16rpx;
+}
+
+.admin-btn {
+  margin-left: 16rpx;
+}
+
+.admin-btn::after {
+  border: none;
+}
+
+.admin-btn--primary {
+  background-color: #e8f8ee;
+  color: #07c160;
+}
+
+.admin-btn--danger {
+  background-color: #fdecec;
+  color: #fa5151;
+}

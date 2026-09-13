@@ -1,5 +1,61 @@
 <!--pages/messages/messages.wxml-->
-<view class="page">
-  <view class="page__title">消息</view>
-  <view class="page__hint">页面建设中</view>
+<view class="messages">
+  <view class="messages__bar">
+    <view
+      class="messages__filter {{unreadOnly ? 'messages__filter--on' : ''}}"
+      bindtap="onToggleUnread"
+    >{{unreadOnly ? '只看未读' : '全部消息'}}</view>
+    <view
+      class="messages__read-all {{markingAll ? 'messages__read-all--busy' : ''}}"
+      bindtap="onMarkAll"
+    >{{markingAll ? '处理中…' : '全部已读'}}</view>
+  </view>
+
+  <view class="list-state" wx:if="{{needLogin}}">
+    <view class="list-state__title">登录后查看消息</view>
+    <view class="list-state__desc">订单进度与评价提醒会以站内消息送达</view>
+    <button class="list-state__btn" size="mini" type="primary" bindtap="onGoLogin">去登录</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{loading}}">
+    <view class="list-state__desc">加载中…</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">消息加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{items.length === 0}}">
+    <view class="list-state__title">{{unreadOnly ? '没有未读消息' : '还没有消息'}}</view>
+    <view class="list-state__desc">下单、接单、交付与评价都会在这里提醒</view>
+  </view>
+
+  <view class="messages__list" wx:else>
+    <view
+      class="msg {{item.read ? '' : 'msg--unread'}}"
+      wx:for="{{items}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onTapItem"
+    >
+      <view class="msg__head">
+        <text class="item-status item-status--{{item.typeTone}}">{{item.typeLabel}}</text>
+        <text class="msg__time">{{item.time}}</text>
+      </view>
+      <view class="msg__title">
+        <text class="msg__dot" wx:if="{{!item.read}}"></text>
+        <text>{{item.title}}</text>
+      </view>
+      <view class="msg__content">{{item.content}}</view>
+      <view class="msg__foot">
+        <text class="msg__route" wx:if="{{item.navigable}}">查看详情 ›</text>
+        <text class="msg__marking" wx:if="{{markingId === item.id}}">标记中…</text>
+      </view>
+    </view>
+
+    <view class="list-more" wx:if="{{loadingMore}}">加载中…</view>
+    <view class="list-more" wx:elif="{{!hasNext}}">没有更多了</view>
+  </view>
 </view>

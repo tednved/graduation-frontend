@@ -1,0 +1,74 @@
+<!--pages/orders/orders.wxml-->
+<view class="orders">
+  <view class="orders__side">
+    <view
+      class="orders__side-item {{side === 'BUY' ? 'orders__side-item--on' : ''}}"
+      data-side="BUY"
+      bindtap="onSwitchSide"
+    >我买到的</view>
+    <view
+      class="orders__side-item {{side === 'SELL' ? 'orders__side-item--on' : ''}}"
+      data-side="SELL"
+      bindtap="onSwitchSide"
+    >我卖出的</view>
+  </view>
+
+  <view class="orders__filter">
+    <picker
+      class="orders__picker"
+      mode="selector"
+      range="{{statusOptions}}"
+      range-key="label"
+      value="{{statusIndex}}"
+      bindchange="onStatusChange"
+    >
+      <view class="orders__picker-value">{{statusOptions[statusIndex].label}} ▾</view>
+    </picker>
+  </view>
+
+  <view class="list-state" wx:if="{{needLogin}}">
+    <view class="list-state__title">登录后查看订单</view>
+    <view class="list-state__desc">订单与交易进度保存在你的账号里</view>
+    <button class="list-state__btn" size="mini" type="primary" bindtap="onGoLogin">去登录</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{loading}}">
+    <view class="list-state__desc">加载中…</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">订单加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{orders.length === 0}}">
+    <view class="list-state__title">{{emptyTitle}}</view>
+    <view class="list-state__desc">{{emptyDesc}}</view>
+  </view>
+
+  <view class="orders__list" wx:else>
+    <view class="order-card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="onTapOrder">
+      <view class="order-card__head">
+        <text class="order-card__no">{{item.orderNo}}</text>
+        <text class="item-status item-status--{{item.statusTone}}">{{item.statusLabel}}</text>
+      </view>
+      <view class="order-card__body">
+        <image class="order-card__cover" src="{{item.itemImageUrl}}" mode="aspectFill" lazy-load />
+        <view class="order-card__info">
+          <view class="order-card__title">{{item.itemTitle}}</view>
+          <view class="order-card__amount">{{item.amountText}}</view>
+          <view class="order-card__meta">
+            <text>{{side === 'BUY' ? '卖家' : '买家'}}：{{item.counterpartName}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="order-card__foot">
+        <text>{{item.createdAt}}</text>
+      </view>
+    </view>
+
+    <view class="list-more" wx:if="{{loadingMore}}">加载中…</view>
+    <view class="list-more" wx:elif="{{!hasNext}}">没有更多了</view>
+  </view>
+</view>

@@ -13,6 +13,9 @@ const mediaUrl = require('../../utils/media-url.js');
 const EDIT_ROUTE = '/pages/profile-edit/profile-edit';
 const CERT_ROUTE = '/pages/certification/certification';
 const FAVORITES_ROUTE = '/pages/favorites/favorites';
+const ORDERS_ROUTE = '/pages/orders/orders';
+const USER_REVIEWS_ROUTE = '/pages/user-reviews/user-reviews';
+const ADMIN_ROUTE = '/pages/admin/admin';
 
 const EMPTY_VIEW = {
   loggedIn: false,
@@ -21,7 +24,8 @@ const EMPTY_VIEW = {
   certLabel: '',
   certTone: 'muted',
   joinedAt: '',
-  initial: ''
+  initial: '',
+  isAdmin: false
 };
 
 Page({
@@ -33,7 +37,8 @@ Page({
     certLabel: '',
     certTone: 'muted',
     joinedAt: '',
-    initial: ''
+    initial: '',
+    isAdmin: false
   },
 
   onLoad: function () {
@@ -79,7 +84,10 @@ Page({
         certLabel: enums.certificationStatusLabel(profile.certificationStatus),
         certTone: enums.certificationStatusTone(profile.certificationStatus),
         joinedAt: String(profile.createdAt || '').slice(0, 10),
-        initial: String(profile.nickname || '').slice(0, 1)
+        initial: String(profile.nickname || '').slice(0, 1),
+        // 角色只存在于 GET /users/me：登录返回的用户摘要是 {id, nickname, avatarUrl}，
+        // 因此管理台入口只能由这里的资料查询结果驱动，不能从会话里读。
+        isAdmin: profile.role === enums.UserRole.ADMIN
       });
     }, function (error) {
       self.alive.setData(self, { loading: false });
@@ -101,8 +109,29 @@ Page({
     wx.navigateTo({ url: FAVORITES_ROUTE });
   },
 
+  // 买入/卖出共用订单页，由 side 参数决定视角。
+  onGoOrders: function (event) {
+    const side = event.currentTarget.dataset.side === 'SELL' ? 'SELL' : 'BUY';
+    wx.navigateTo({ url: ORDERS_ROUTE + '?side=' + side });
+  },
+
+  // 查看自己收到的公开评价。用户 ID 取自会话摘要，永远是十进制字符串。
+  onGoMyReviews: function () {
+    const user = store.getUser();
+    if (!user || user.id === undefined || user.id === null || user.id === '') {
+      errorHandler.requireLogin();
+      return;
+    }
+    wx.navigateTo({ url: USER_REVIEWS_ROUTE + '?id=' + user.id });
+  },
+
   onGoCertification: function () {
     wx.navigateTo({ url: CERT_ROUTE });
+  },
+
+  // 管理台入口只对 ADMIN 显示。入口隐藏不是门禁：管理页自己会再查一次角色。
+  onGoAdmin: function () {
+    wx.navigateTo({ url: ADMIN_ROUTE });
   },
 
   onLogout: function () {
