@@ -95,8 +95,9 @@ function buildAdminItemView(item) {
     viewCount: source.viewCount === undefined || source.viewCount === null ? 0 : source.viewCount,
     createdDate: itemView.formatDate(source.createdAt),
     updatedAt: formatDateTime(source.updatedAt),
-    // 已下架/已删除的商品不需要再下架一次，按钮据此隐藏。
-    offShelfable: source.status !== enums.ItemStatus.OFF_SHELF && source.status !== enums.ItemStatus.DELETED
+    // 只有在售与草稿能强制下架：已下架/已删除不需要再下架一次，而已预订（有进行中订单）
+    // 与已售出的商品一旦被下架，订单就再也走不完，服务端也会按 ITEM_NOT_EDITABLE 拒绝。
+    offShelfable: source.status === enums.ItemStatus.ON_SALE || source.status === enums.ItemStatus.DRAFT
   };
 }
 
