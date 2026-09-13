@@ -10,7 +10,11 @@
     "pages/certification/certification",
     "pages/search/search",
     "pages/item-detail/item-detail",
-    "pages/favorites/favorites"
+    "pages/favorites/favorites",
+    "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/review-create/review-create",
+    "pages/user-reviews/user-reviews"
   ],
   "window": {
     "navigationBarTextStyle": "black",

@@ -13,6 +13,8 @@ const mediaUrl = require('../../utils/media-url.js');
 const EDIT_ROUTE = '/pages/profile-edit/profile-edit';
 const CERT_ROUTE = '/pages/certification/certification';
 const FAVORITES_ROUTE = '/pages/favorites/favorites';
+const ORDERS_ROUTE = '/pages/orders/orders';
+const USER_REVIEWS_ROUTE = '/pages/user-reviews/user-reviews';
 
 const EMPTY_VIEW = {
   loggedIn: false,
@@ -99,6 +101,22 @@ Page({
 
   onGoFavorites: function () {
     wx.navigateTo({ url: FAVORITES_ROUTE });
+  },
+
+  // 买入/卖出共用订单页，由 side 参数决定视角。
+  onGoOrders: function (event) {
+    const side = event.currentTarget.dataset.side === 'SELL' ? 'SELL' : 'BUY';
+    wx.navigateTo({ url: ORDERS_ROUTE + '?side=' + side });
+  },
+
+  // 查看自己收到的公开评价。用户 ID 取自会话摘要，永远是十进制字符串。
+  onGoMyReviews: function () {
+    const user = store.getUser();
+    if (!user || user.id === undefined || user.id === null || user.id === '') {
+      errorHandler.requireLogin();
+      return;
+    }
+    wx.navigateTo({ url: USER_REVIEWS_ROUTE + '?id=' + user.id });
   },
 
   onGoCertification: function () {

@@ -36,7 +36,10 @@
     </view>
 
     <view class="me__actions">
+      <button class="me__action" data-side="BUY" bindtap="onGoOrders">我买到的</button>
+      <button class="me__action" data-side="SELL" bindtap="onGoOrders">我卖出的</button>
       <button class="me__action" bindtap="onGoFavorites">我的收藏</button>
+      <button class="me__action" bindtap="onGoMyReviews">我收到的评价</button>
       <button class="me__action" bindtap="onEditProfile">编辑资料</button>
       <button class="me__action" bindtap="onGoCertification">校园认证</button>
       <button

@@ -1,0 +1,101 @@
+<!--pages/order-detail/order-detail.wxml-->
+<view class="order">
+  <view class="list-state" wx:if="{{loading}}">
+    <view class="list-state__desc">加载中…</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{invalid}}">
+    <view class="list-state__title">{{invalidReason}}</view>
+    <view class="list-state__desc">只有订单双方可以查看交易详情</view>
+    <button class="list-state__btn" size="mini" bindtap="onGoOrders">我的订单</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <block wx:else>
+    <view class="order__status">
+      <text class="item-status item-status--{{detail.statusTone}}">{{detail.statusLabel}}</text>
+      <text class="order__no">订单号 {{detail.orderNo}}</text>
+    </view>
+
+    <view class="order__block" bindtap="onTapItem">
+      <view class="order__section-title">商品快照</view>
+      <view class="order__item">
+        <image class="order__item-cover" src="{{detail.item.imageUrl}}" mode="aspectFill" />
+        <view class="order__item-info">
+          <view class="order__item-title">{{detail.item.title}}</view>
+          <view class="order__item-price">{{detail.item.priceText}}</view>
+        </view>
+      </view>
+      <view class="order__item-hint">快照在下单时固化，商品后续修改不影响本订单</view>
+    </view>
+
+    <view class="order__block">
+      <view class="order__section-title">交易双方</view>
+      <view class="order__party">
+        <image class="order__party-avatar" wx:if="{{detail.buyer.avatarUrl}}" src="{{detail.buyer.avatarUrl}}" mode="aspectFill" />
+        <view class="order__party-avatar order__party-avatar--empty" wx:else>{{detail.buyer.initial}}</view>
+        <text class="order__party-role">买家</text>
+        <text class="order__party-name">{{detail.buyer.nickname}}</text>
+      </view>
+      <view class="order__party">
+        <image class="order__party-avatar" wx:if="{{detail.seller.avatarUrl}}" src="{{detail.seller.avatarUrl}}" mode="aspectFill" />
+        <view class="order__party-avatar order__party-avatar--empty" wx:else>{{detail.seller.initial}}</view>
+        <text class="order__party-role">卖家</text>
+        <text class="order__party-name">{{detail.seller.nickname}}</text>
+      </view>
+    </view>
+
+    <view class="order__block">
+      <view class="order__section-title">金额</view>
+      <view class="order__amount">{{detail.amountText}}</view>
+      <view class="order__cancel-reason" wx:if="{{detail.cancelReason}}">原因：{{detail.cancelReason}}</view>
+    </view>
+
+    <view class="order__block">
+      <view class="order__section-title">时间线</view>
+      <view class="order__event" wx:for="{{detail.events}}" wx:key="id">
+        <view class="order__event-dot"></view>
+        <view class="order__event-body">
+          <view class="order__event-head">
+            <text class="order__event-action">{{item.actionLabel}}</text>
+            <text class="order__event-time">{{item.time}}</text>
+          </view>
+          <view class="order__event-desc">
+            <text wx:if="{{item.fromStatusLabel}}">{{item.fromStatusLabel}} → </text>
+            <text>{{item.toStatusLabel}}</text>
+            <text> · {{item.operatorName}}</text>
+          </view>
+          <view class="order__event-remark" wx:if="{{item.remark}}">备注：{{item.remark}}</view>
+        </view>
+      </view>
+      <view class="order__event-empty" wx:if="{{detail.events.length === 0}}">暂无事件记录</view>
+    </view>
+
+    <view class="order__actions">
+      <button
+        class="order__action"
+        size="mini"
+        wx:for="{{detail.actions}}"
+        wx:key="action"
+        wx:for-item="act"
+        type="{{act.primary ? 'primary' : 'default'}}"
+        data-action="{{act.action}}"
+        disabled="{{acting}}"
+        bindtap="onTapAction"
+      >{{actingAction === act.action ? '处理中…' : act.label}}</button>
+
+      <button
+        class="order__action"
+        size="mini"
+        wx:if="{{detail.canReview}}"
+        disabled="{{acting}}"
+        bindtap="onGoReview"
+      >评价</button>
+    </view>
+  </block>
+</view>

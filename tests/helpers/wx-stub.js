@@ -3,6 +3,10 @@
 
 const storage = new Map();
 
+// TabBar 红点的调用记录。业务代码通过它设置/清除未读红点，
+// 测试断言「登录后设置、退出后被清除」这类行为时需要看到实际调用。
+const tabBarBadgeCalls = [];
+
 let installed = false;
 
 function install() {
@@ -31,6 +35,15 @@ function install() {
     login: function (options) {
       if (options && options.success) options.success({ code: 'test-login-code' });
     },
+    setTabBarBadge: function (options) {
+      tabBarBadgeCalls.push({ type: 'set', index: options && options.index, text: options && options.text });
+      if (options && options.success) options.success({});
+    },
+    removeTabBarBadge: function (options) {
+      tabBarBadgeCalls.push({ type: 'remove', index: options && options.index });
+      if (options && options.success) options.success({});
+    },
+    setNavigationBarTitle: function () {},
     request: function () {
       throw new Error('wx.request 不应被直接调用：测试需先 __setTransport');
     },
@@ -42,10 +55,12 @@ function install() {
 
 function reset() {
   storage.clear();
+  tabBarBadgeCalls.length = 0;
 }
 
 module.exports = {
   install: install,
   reset: reset,
-  storage: storage
+  storage: storage,
+  tabBarBadgeCalls: tabBarBadgeCalls
 };

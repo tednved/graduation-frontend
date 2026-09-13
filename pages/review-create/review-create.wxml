@@ -1,0 +1,65 @@
+<!--pages/review-create/review-create.wxml-->
+<view class="review">
+  <view class="list-state" wx:if="{{loading}}">
+    <view class="list-state__desc">加载中…</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{invalid}}">
+    <view class="list-state__title">{{invalidReason}}</view>
+    <view class="list-state__desc">只有订单双方可以评价本次交易</view>
+  </view>
+
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">加载失败</view>
+    <view class="list-state__desc">请检查网络后重试</view>
+    <button class="list-state__btn" size="mini" bindtap="onRetry">重试</button>
+  </view>
+
+  <view class="list-state" wx:elif="{{!canReview}}">
+    <view class="list-state__title">{{alreadyReviewed ? '你已经评价过这笔订单' : '当前订单不可评价'}}</view>
+    <view class="list-state__desc">评价在订单完成后才能提交，每笔订单每人只能评价一次</view>
+  </view>
+
+  <block wx:else>
+    <view class="review__block">
+      <view class="review__target">评价对象：{{counterpartName}}</view>
+      <view class="review__hint" wx:if="{{counterpartReviewed}}">对方已经评价过你了</view>
+    </view>
+
+    <view class="review__block">
+      <view class="review__section-title">本次交易评分</view>
+      <view class="review__stars">
+        <text
+          class="review__star {{item <= rating ? 'review__star--on' : ''}}"
+          wx:for="{{stars}}"
+          wx:key="*this"
+          wx:for-item="star"
+          data-value="{{star}}"
+          bindtap="onSelectRating"
+        >★</text>
+        <text class="review__rating-value">{{rating}} 分</text>
+      </view>
+    </view>
+
+    <view class="review__block">
+      <view class="review__section-title">评价内容（可选）</view>
+      <textarea
+        class="review__textarea"
+        value="{{content}}"
+        maxlength="{{contentMax}}"
+        placeholder="说说这次交易的体验，例如商品是否与描述一致、沟通是否顺畅"
+        bindinput="onContentInput"
+      />
+      <view class="review__counter">{{contentLength}} / {{contentMax}}</view>
+    </view>
+
+    <view class="review__submit">
+      <button
+        type="primary"
+        loading="{{submitting}}"
+        disabled="{{submitting}}"
+        bindtap="onSubmit"
+      >提交评价</button>
+    </view>
+  </block>
+</view>

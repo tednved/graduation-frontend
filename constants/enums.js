@@ -98,6 +98,134 @@ const ITEM_SORT_LABEL = {
 const ITEM_CONDITION_OPTIONS = [ItemCondition.NEW, ItemCondition.LIKE_NEW, ItemCondition.GOOD, ItemCondition.FAIR];
 const ITEM_SORT_OPTIONS = [ItemSort.NEWEST, ItemSort.PRICE_ASC, ItemSort.PRICE_DESC, ItemSort.POPULAR];
 
+// 交易方式。MVP 只接受 OFFLINE；SIMULATED_PAYMENT 保留在枚举中但不可提交。
+const TradeMode = {
+  OFFLINE: 'OFFLINE',
+  SIMULATED_PAYMENT: 'SIMULATED_PAYMENT'
+};
+
+const OrderStatus = {
+  PENDING_CONFIRMATION: 'PENDING_CONFIRMATION',
+  CONFIRMED: 'CONFIRMED',
+  PENDING_RECEIPT: 'PENDING_RECEIPT',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  REJECTED: 'REJECTED'
+};
+
+// 订单操作。前端按钮只由后端 allowedActions 驱动，这里的取值仅用于翻译文案。
+const OrderAction = {
+  CREATE: 'CREATE',
+  CONFIRM: 'CONFIRM',
+  REJECT: 'REJECT',
+  CANCEL: 'CANCEL',
+  DELIVER: 'DELIVER',
+  RECEIVE: 'RECEIVE'
+};
+
+// 契约层枚举：同一路径上的买卖视角，不是领域状态。
+const OrderSide = {
+  BUY: 'BUY',
+  SELL: 'SELL'
+};
+
+const ReviewStatus = {
+  VISIBLE: 'VISIBLE',
+  HIDDEN: 'HIDDEN'
+};
+
+const NotificationType = {
+  ORDER_CREATED: 'ORDER_CREATED',
+  ORDER_CONFIRMED: 'ORDER_CONFIRMED',
+  ORDER_REJECTED: 'ORDER_REJECTED',
+  ORDER_CANCELLED: 'ORDER_CANCELLED',
+  ORDER_DELIVERED: 'ORDER_DELIVERED',
+  ORDER_COMPLETED: 'ORDER_COMPLETED',
+  REVIEW_RECEIVED: 'REVIEW_RECEIVED',
+  SYSTEM: 'SYSTEM'
+};
+
+const ORDER_STATUS_LABEL = {
+  PENDING_CONFIRMATION: '待卖家接单',
+  CONFIRMED: '待交付',
+  PENDING_RECEIPT: '待收货',
+  COMPLETED: '已完成',
+  CANCELLED: '已取消',
+  REJECTED: '已拒绝'
+};
+
+const ORDER_STATUS_TONE = {
+  PENDING_CONFIRMATION: 'warning',
+  CONFIRMED: 'warning',
+  PENDING_RECEIPT: 'warning',
+  COMPLETED: 'success',
+  CANCELLED: 'muted',
+  REJECTED: 'danger'
+};
+
+// 订单按钮文案。与 allowedActions 的取值一一对应。
+const ORDER_ACTION_LABEL = {
+  CREATE: '下单',
+  CONFIRM: '接单',
+  REJECT: '拒绝订单',
+  CANCEL: '取消订单',
+  DELIVER: '确认交付',
+  RECEIVE: '确认收货'
+};
+
+// 订单事件时间线的动作文案，与按钮文案分开：一个是「要做什么」，一个是「做过什么」。
+const ORDER_EVENT_LABEL = {
+  CREATE: '创建订单',
+  CONFIRM: '卖家接单',
+  REJECT: '卖家拒绝',
+  CANCEL: '订单取消',
+  DELIVER: '卖家交付',
+  RECEIVE: '买家收货'
+};
+
+// 状态筛选下拉项。空串表示不传 status 参数。
+const ORDER_STATUS_FILTER_OPTIONS = [
+  { value: '', label: '全部状态' },
+  { value: OrderStatus.PENDING_CONFIRMATION, label: ORDER_STATUS_LABEL.PENDING_CONFIRMATION },
+  { value: OrderStatus.CONFIRMED, label: ORDER_STATUS_LABEL.CONFIRMED },
+  { value: OrderStatus.PENDING_RECEIPT, label: ORDER_STATUS_LABEL.PENDING_RECEIPT },
+  { value: OrderStatus.COMPLETED, label: ORDER_STATUS_LABEL.COMPLETED },
+  { value: OrderStatus.CANCELLED, label: ORDER_STATUS_LABEL.CANCELLED },
+  { value: OrderStatus.REJECTED, label: ORDER_STATUS_LABEL.REJECTED }
+];
+
+const NOTIFICATION_TYPE_LABEL = {
+  ORDER_CREATED: '买家下单',
+  ORDER_CONFIRMED: '订单已接单',
+  ORDER_REJECTED: '订单被拒绝',
+  ORDER_CANCELLED: '订单已取消',
+  ORDER_DELIVERED: '卖家已交付',
+  ORDER_COMPLETED: '订单已完成',
+  REVIEW_RECEIVED: '收到新评价',
+  SYSTEM: '系统消息'
+};
+
+const NOTIFICATION_TYPE_TONE = {
+  ORDER_CREATED: 'warning',
+  ORDER_CONFIRMED: 'warning',
+  ORDER_REJECTED: 'danger',
+  ORDER_CANCELLED: 'muted',
+  ORDER_DELIVERED: 'warning',
+  ORDER_COMPLETED: 'success',
+  REVIEW_RECEIVED: 'success',
+  SYSTEM: 'muted'
+};
+
+// 评价评分筛选下拉项。空串表示不传 rating 参数。
+const REVIEW_RATING_FILTER_OPTIONS = [
+  { value: '', label: '全部评分' },
+  { value: '5', label: '5 星' },
+  { value: '4', label: '4 星' },
+  { value: '3', label: '3 星' },
+  { value: '2', label: '2 星' },
+  { value: '1', label: '1 星' }
+];
+
 // 认证状态的中文文案。页面不直接写死，统一从这里取。
 const CERTIFICATION_STATUS_LABEL = {
   NOT_SUBMITTED: '未认证',
@@ -145,6 +273,30 @@ function itemSortLabel(sort) {
   return ITEM_SORT_LABEL[sort] || '最新发布';
 }
 
+function orderStatusLabel(status) {
+  return ORDER_STATUS_LABEL[status] || '未知状态';
+}
+
+function orderStatusTone(status) {
+  return ORDER_STATUS_TONE[status] || 'muted';
+}
+
+function orderActionLabel(action) {
+  return ORDER_ACTION_LABEL[action] || action || '';
+}
+
+function orderEventLabel(action) {
+  return ORDER_EVENT_LABEL[action] || ORDER_ACTION_LABEL[action] || action || '';
+}
+
+function notificationTypeLabel(type) {
+  return NOTIFICATION_TYPE_LABEL[type] || '消息';
+}
+
+function notificationTypeTone(type) {
+  return NOTIFICATION_TYPE_TONE[type] || 'muted';
+}
+
 module.exports = {
   CertificationStatus: CertificationStatus,
   CertificationType: CertificationType,
@@ -155,6 +307,12 @@ module.exports = {
   ItemStatus: ItemStatus,
   ItemCondition: ItemCondition,
   ItemSort: ItemSort,
+  TradeMode: TradeMode,
+  OrderStatus: OrderStatus,
+  OrderAction: OrderAction,
+  OrderSide: OrderSide,
+  ReviewStatus: ReviewStatus,
+  NotificationType: NotificationType,
   CERTIFICATION_STATUS_LABEL: CERTIFICATION_STATUS_LABEL,
   CERTIFICATION_STATUS_TONE: CERTIFICATION_STATUS_TONE,
   CERTIFICATION_TYPE_LABEL: CERTIFICATION_TYPE_LABEL,
@@ -164,10 +322,24 @@ module.exports = {
   ITEM_SORT_LABEL: ITEM_SORT_LABEL,
   ITEM_CONDITION_OPTIONS: ITEM_CONDITION_OPTIONS,
   ITEM_SORT_OPTIONS: ITEM_SORT_OPTIONS,
+  ORDER_STATUS_LABEL: ORDER_STATUS_LABEL,
+  ORDER_STATUS_TONE: ORDER_STATUS_TONE,
+  ORDER_ACTION_LABEL: ORDER_ACTION_LABEL,
+  ORDER_EVENT_LABEL: ORDER_EVENT_LABEL,
+  ORDER_STATUS_FILTER_OPTIONS: ORDER_STATUS_FILTER_OPTIONS,
+  NOTIFICATION_TYPE_LABEL: NOTIFICATION_TYPE_LABEL,
+  NOTIFICATION_TYPE_TONE: NOTIFICATION_TYPE_TONE,
+  REVIEW_RATING_FILTER_OPTIONS: REVIEW_RATING_FILTER_OPTIONS,
   certificationStatusLabel: certificationStatusLabel,
   certificationStatusTone: certificationStatusTone,
   itemStatusLabel: itemStatusLabel,
   itemStatusTone: itemStatusTone,
   itemConditionLabel: itemConditionLabel,
-  itemSortLabel: itemSortLabel
+  itemSortLabel: itemSortLabel,
+  orderStatusLabel: orderStatusLabel,
+  orderStatusTone: orderStatusTone,
+  orderActionLabel: orderActionLabel,
+  orderEventLabel: orderEventLabel,
+  notificationTypeLabel: notificationTypeLabel,
+  notificationTypeTone: notificationTypeTone
 };

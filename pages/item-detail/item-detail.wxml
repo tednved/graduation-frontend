@@ -89,8 +89,9 @@
         type="primary"
         wx:if="{{item.canBuy}}"
         data-action="BUY"
+        disabled="{{acting}}"
         bindtap="onTapAction"
-      >我想要</button>
+      >{{acting ? '处理中…' : '我想要'}}</button>
     </view>
   </block>
 </view>
