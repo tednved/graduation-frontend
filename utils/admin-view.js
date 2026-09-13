@@ -105,6 +105,32 @@ function buildAdminItemViews(list) {
   return (list || []).map(buildAdminItemView);
 }
 
+function buildAdminOrderView(order) {
+  const source = order || {};
+  const item = orderView.buildItemSnapshotView(source.item);
+  const buyer = orderView.buildUserView(source.buyer);
+  const seller = orderView.buildUserView(source.seller);
+  return {
+    id: idOf(source.id),
+    orderNo: source.orderNo || '',
+    status: source.status || '',
+    statusLabel: enums.orderStatusLabel(source.status),
+    statusTone: enums.orderStatusTone(source.status),
+    amountText: orderView.formatMoney(source.amount),
+    itemTitle: item.title,
+    itemImageUrl: item.imageUrl,
+    buyerName: buyer.nickname,
+    buyerId: buyer.id,
+    sellerName: seller.nickname,
+    sellerId: seller.id,
+    createdAt: formatDateTime(source.createdAt)
+  };
+}
+
+function buildAdminOrderViews(list) {
+  return (list || []).map(buildAdminOrderView);
+}
+
 // 审计详情的键值串。结构随动作变化，只做展示，不解释含义。
 function formatDetail(detail) {
   if (!detail || typeof detail !== 'object') return '';
@@ -145,6 +171,8 @@ module.exports = {
   buildUserViews: buildUserViews,
   buildAdminItemView: buildAdminItemView,
   buildAdminItemViews: buildAdminItemViews,
+  buildAdminOrderView: buildAdminOrderView,
+  buildAdminOrderViews: buildAdminOrderViews,
   formatDetail: formatDetail,
   buildAuditLogView: buildAuditLogView,
   buildAuditLogViews: buildAuditLogViews

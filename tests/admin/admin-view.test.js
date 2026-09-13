@@ -184,3 +184,26 @@ describe('审计视图', function () {
     assert.deepEqual(adminView.buildCertificationViews([]), []);
   });
 });
+
+describe('管理端订单视图', function () {
+  it('同时展示买卖双方与快照，ID 保持字符串', function () {
+    const view = adminView.buildAdminOrderView({
+      id: '9007199254740993',
+      orderNo: 'O202609130001',
+      status: 'CONFIRMED',
+      amount: '88.00',
+      item: { itemId: '7', title: '二手相机', imageUrl: '/media/3', price: '88.00' },
+      buyer: { id: '8', nickname: '买家' },
+      seller: { id: '9', nickname: '卖家' },
+      createdAt: '2026-09-13T02:30:00.000Z'
+    });
+    assert.equal(view.id, '9007199254740993');
+    assert.equal(view.statusLabel, '待交付');
+    assert.equal(view.amountText, '¥88.00');
+    assert.equal(view.itemTitle, '二手相机');
+    assert.equal(view.itemImageUrl, 'http://127.0.0.1:8080/media/3');
+    assert.equal(view.buyerId, '8');
+    assert.equal(view.sellerId, '9');
+    assert.deepEqual(adminView.buildAdminOrderViews(null), []);
+  });
+});

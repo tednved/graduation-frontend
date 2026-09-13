@@ -114,6 +114,21 @@ function offShelfItem(id, reason) {
   });
 }
 
+// 管理员专属全站订单读取；与当前管理员自己的 BUY/SELL 订单接口完全分离。
+function listOrders(params) {
+  const source = params || {};
+  const query = pageQuery(source);
+  putIfPresent(query, 'status', source.status);
+  putIfPresent(query, 'buyerId', source.buyerId);
+  putIfPresent(query, 'sellerId', source.sellerId);
+  putIfPresent(query, 'keyword', source.keyword);
+  return request.request({ method: 'GET', path: '/admin/orders', query: query });
+}
+
+function getOrder(id) {
+  return request.request({ method: 'GET', path: '/admin/orders/' + id });
+}
+
 // 审计查询，只读。from / to 是 UTC ISO-8601，接口层两端都含。
 function listAuditLogs(params) {
   const source = params || {};
@@ -141,5 +156,7 @@ module.exports = {
   enableUser: enableUser,
   listItems: listItems,
   offShelfItem: offShelfItem,
+  listOrders: listOrders,
+  getOrder: getOrder,
   listAuditLogs: listAuditLogs
 };
