@@ -42,6 +42,7 @@
       <button class="me__action" bindtap="onGoMyReviews">我收到的评价</button>
       <button class="me__action" bindtap="onEditProfile">编辑资料</button>
       <button class="me__action" bindtap="onGoCertification">校园认证</button>
+      <button class="me__action" wx:if="{{isAdmin}}" bindtap="onGoAdmin">管理台</button>
       <button
         class="me__action me__action--danger"
         loading="{{submitting}}"

@@ -249,6 +249,87 @@ const CERTIFICATION_TYPE_LABEL = {
   MANUAL: '人工审核'
 };
 
+// 账号状态文案，管理台用户列表使用。
+const USER_STATUS_LABEL = {
+  ACTIVE: '正常',
+  DISABLED: '已禁用'
+};
+
+const USER_STATUS_TONE = {
+  ACTIVE: 'success',
+  DISABLED: 'danger'
+};
+
+const USER_ROLE_LABEL = {
+  USER: '用户',
+  ADMIN: '管理员'
+};
+
+// 审计动作与目标类型文案。取值来自后端 AuditLogService.record 的 action / targetType 实参，
+// 未列出的取值原样展示，新增动作时不会退化成空白。
+const AUDIT_ACTION_LABEL = {
+  CERTIFICATION_APPROVE: '通过认证',
+  CERTIFICATION_REJECT: '驳回认证',
+  USER_DISABLE: '禁用用户',
+  USER_ENABLE: '恢复用户',
+  ITEM_ADMIN_OFF_SHELF: '强制下架商品',
+  CATEGORY_CREATE: '新建分类',
+  CATEGORY_UPDATE: '修改分类',
+  CATEGORY_ENABLE: '启用分类',
+  CATEGORY_DISABLE: '停用分类'
+};
+
+const AUDIT_TARGET_TYPE_LABEL = {
+  CERTIFICATION: '认证申请',
+  USER: '用户',
+  ITEM: '商品',
+  CATEGORY: '分类'
+};
+
+// 认证审核筛选项。空串表示不传 status 参数。
+const CERTIFICATION_STATUS_FILTER_OPTIONS = [
+  { value: '', label: '全部状态' },
+  { value: CertificationStatus.PENDING, label: CERTIFICATION_STATUS_LABEL.PENDING },
+  { value: CertificationStatus.APPROVED, label: CERTIFICATION_STATUS_LABEL.APPROVED },
+  { value: CertificationStatus.REJECTED, label: CERTIFICATION_STATUS_LABEL.REJECTED }
+];
+
+// 管理台用户筛选项，账号状态与认证状态各一个。
+const USER_STATUS_FILTER_OPTIONS = [
+  { value: '', label: '全部账号状态' },
+  { value: UserStatus.ACTIVE, label: USER_STATUS_LABEL.ACTIVE },
+  { value: UserStatus.DISABLED, label: USER_STATUS_LABEL.DISABLED }
+];
+
+const USER_CERTIFICATION_FILTER_OPTIONS = [
+  { value: '', label: '全部认证状态' },
+  { value: CertificationStatus.PENDING, label: CERTIFICATION_STATUS_LABEL.PENDING },
+  { value: CertificationStatus.APPROVED, label: CERTIFICATION_STATUS_LABEL.APPROVED },
+  { value: CertificationStatus.REJECTED, label: CERTIFICATION_STATUS_LABEL.REJECTED },
+  { value: CertificationStatus.NOT_SUBMITTED, label: CERTIFICATION_STATUS_LABEL.NOT_SUBMITTED }
+];
+
+// 管理台商品筛选项。后端接受多状态，界面只用单选：一次看清一个状态足够，
+// 也避免小程序 picker 无法表达多选的取舍。
+const ITEM_STATUS_FILTER_OPTIONS = [
+  { value: '', label: '全部状态' },
+  { value: ItemStatus.ON_SALE, label: ITEM_STATUS_LABEL.ON_SALE },
+  { value: ItemStatus.RESERVED, label: ITEM_STATUS_LABEL.RESERVED },
+  { value: ItemStatus.SOLD, label: ITEM_STATUS_LABEL.SOLD },
+  { value: ItemStatus.OFF_SHELF, label: ITEM_STATUS_LABEL.OFF_SHELF },
+  { value: ItemStatus.DRAFT, label: ITEM_STATUS_LABEL.DRAFT },
+  { value: ItemStatus.DELETED, label: ITEM_STATUS_LABEL.DELETED }
+];
+
+const AUDIT_ACTION_FILTER_OPTIONS = [
+  { value: '', label: '全部动作' },
+  { value: 'CERTIFICATION_APPROVE', label: AUDIT_ACTION_LABEL.CERTIFICATION_APPROVE },
+  { value: 'CERTIFICATION_REJECT', label: AUDIT_ACTION_LABEL.CERTIFICATION_REJECT },
+  { value: 'USER_DISABLE', label: AUDIT_ACTION_LABEL.USER_DISABLE },
+  { value: 'USER_ENABLE', label: AUDIT_ACTION_LABEL.USER_ENABLE },
+  { value: 'ITEM_ADMIN_OFF_SHELF', label: AUDIT_ACTION_LABEL.ITEM_ADMIN_OFF_SHELF }
+];
+
 function certificationStatusLabel(status) {
   return CERTIFICATION_STATUS_LABEL[status] || '未知状态';
 }
@@ -271,6 +352,26 @@ function itemConditionLabel(condition) {
 
 function itemSortLabel(sort) {
   return ITEM_SORT_LABEL[sort] || '最新发布';
+}
+
+function userStatusLabel(status) {
+  return USER_STATUS_LABEL[status] || '未知状态';
+}
+
+function userStatusTone(status) {
+  return USER_STATUS_TONE[status] || 'muted';
+}
+
+function userRoleLabel(role) {
+  return USER_ROLE_LABEL[role] || '用户';
+}
+
+function auditActionLabel(action) {
+  return AUDIT_ACTION_LABEL[action] || action || '';
+}
+
+function auditTargetTypeLabel(targetType) {
+  return AUDIT_TARGET_TYPE_LABEL[targetType] || targetType || '';
 }
 
 function orderStatusLabel(status) {
@@ -316,6 +417,16 @@ module.exports = {
   CERTIFICATION_STATUS_LABEL: CERTIFICATION_STATUS_LABEL,
   CERTIFICATION_STATUS_TONE: CERTIFICATION_STATUS_TONE,
   CERTIFICATION_TYPE_LABEL: CERTIFICATION_TYPE_LABEL,
+  USER_STATUS_LABEL: USER_STATUS_LABEL,
+  USER_STATUS_TONE: USER_STATUS_TONE,
+  USER_ROLE_LABEL: USER_ROLE_LABEL,
+  AUDIT_ACTION_LABEL: AUDIT_ACTION_LABEL,
+  AUDIT_TARGET_TYPE_LABEL: AUDIT_TARGET_TYPE_LABEL,
+  CERTIFICATION_STATUS_FILTER_OPTIONS: CERTIFICATION_STATUS_FILTER_OPTIONS,
+  USER_STATUS_FILTER_OPTIONS: USER_STATUS_FILTER_OPTIONS,
+  USER_CERTIFICATION_FILTER_OPTIONS: USER_CERTIFICATION_FILTER_OPTIONS,
+  ITEM_STATUS_FILTER_OPTIONS: ITEM_STATUS_FILTER_OPTIONS,
+  AUDIT_ACTION_FILTER_OPTIONS: AUDIT_ACTION_FILTER_OPTIONS,
   ITEM_STATUS_LABEL: ITEM_STATUS_LABEL,
   ITEM_STATUS_TONE: ITEM_STATUS_TONE,
   ITEM_CONDITION_LABEL: ITEM_CONDITION_LABEL,
@@ -336,6 +447,11 @@ module.exports = {
   itemStatusTone: itemStatusTone,
   itemConditionLabel: itemConditionLabel,
   itemSortLabel: itemSortLabel,
+  userStatusLabel: userStatusLabel,
+  userStatusTone: userStatusTone,
+  userRoleLabel: userRoleLabel,
+  auditActionLabel: auditActionLabel,
+  auditTargetTypeLabel: auditTargetTypeLabel,
   orderStatusLabel: orderStatusLabel,
   orderStatusTone: orderStatusTone,
   orderActionLabel: orderActionLabel,
