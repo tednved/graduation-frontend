@@ -23,7 +23,7 @@
 | FE-MVP-01 | `feat/FE-MVP-01-core` | Claude | DONE | 2026-09-11 | [#3](https://github.com/tednved/graduation-frontend/pull/3) | `docs/handoffs/FE-MVP-01.md` | API-01 `e15baa77` | 2026-09-12 |
 | FE-MVP-02 | `feat/FE-MVP-02-item-favorite` | Claude | DONE | 2026-09-12 | [#4](https://github.com/tednved/graduation-frontend/pull/4) | `docs/handoffs/FE-MVP-02.md` | 合并提交 `7e283cf`；前端 76/76、联调 22/22、GUI 冒烟通过 | 2026-09-12 |
 | FE-MVP-03 | `feat/FE-MVP-03-trade` | Claude | DONE | 2026-09-13 | [#5](https://github.com/tednved/graduation-frontend/pull/5) | `docs/handoffs/FE-MVP-03.md` | 合并提交 `02e8a22`；静态检查 6/6、Node 137/137、负责人 GUI 运行验收通过 | 2026-09-13 |
-| QA-01 | `fix/QA-01-final` | Claude / Codex | IN_PROGRESS | 2026-09-13 | [#6](https://github.com/tednved/graduation-frontend/pull/6)（Draft） | `docs/handoffs/QA-01.md` | 后端 `tednved/graduation-backend#8`；管理台仅在售/草稿渲染强制下架（对齐后端 409）、管理员专属订单监管区域；静态 6/6、Node 138/138；待真实 HTTP/GUI | 2026-09-13 |
+| QA-01 | `fix/QA-01-final` | Claude / Codex | REVIEW | 2026-09-13 | [#6](https://github.com/tednved/graduation-frontend/pull/6)（Draft） | `docs/handoffs/QA-01.md` | 后端 `tednved/graduation-backend#8`；管理台仅在售/草稿渲染强制下架（对齐后端 409）、管理员专属订单监管区域；静态 6/6、Node 138/138、真实 HTTP 59/0/1、GUI 90/0/0 复验通过 | 2026-09-14 |
 
 ## 合并后更新要求
 
