@@ -24,6 +24,7 @@
 | FE-MVP-02 | `feat/FE-MVP-02-item-favorite` | Claude | DONE | 2026-09-12 | [#4](https://github.com/tednved/graduation-frontend/pull/4) | `docs/handoffs/FE-MVP-02.md` | 合并提交 `7e283cf`；前端 76/76、联调 22/22、GUI 冒烟通过 | 2026-09-12 |
 | FE-MVP-03 | `feat/FE-MVP-03-trade` | Claude | DONE | 2026-09-13 | [#5](https://github.com/tednved/graduation-frontend/pull/5) | `docs/handoffs/FE-MVP-03.md` | 合并提交 `02e8a22`；静态检查 6/6、Node 137/137、负责人 GUI 运行验收通过 | 2026-09-13 |
 | QA-01 | `fix/QA-01-final` | Claude / Codex | DONE | 2026-09-13 | [#6](https://github.com/tednved/graduation-frontend/pull/6) | `docs/handoffs/QA-01.md` | 合并提交 `a4f603e`；静态 6/6、Node 138/138、HTTP 59/0/1、GUI 90/0/0 复验通过 | 2026-09-14 |
+| DOC-01 | `docs/DOC-01-delivery` | Claude | REVIEW | 2026-09-14 | [#7](https://github.com/tednved/graduation-frontend/pull/7) | 无（交付材料在根目录，不受 Git 管理） | 后端 `a2b6f48`；README 重写为导入与联调说明（导入路径、AppID、urlCheck、双角色演示数据、管理台五区域）；静态 6/6、Node 138/138 复验通过 | 2026-09-14 |
 | DOC-01 | `docs/DOC-01-delivery` | 待领取 | READY | 2026-09-14 | 待创建 | 待创建 | 基线 `a4f603e`；仅启动/演示/验收文档，无业务页面改动 | 2026-09-14 |
 
 ## 合并后更新要求
