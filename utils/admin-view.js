@@ -95,13 +95,40 @@ function buildAdminItemView(item) {
     viewCount: source.viewCount === undefined || source.viewCount === null ? 0 : source.viewCount,
     createdDate: itemView.formatDate(source.createdAt),
     updatedAt: formatDateTime(source.updatedAt),
-    // 已下架/已删除的商品不需要再下架一次，按钮据此隐藏。
-    offShelfable: source.status !== enums.ItemStatus.OFF_SHELF && source.status !== enums.ItemStatus.DELETED
+    // 只有在售与草稿能强制下架：已下架/已删除不需要再下架一次，而已预订（有进行中订单）
+    // 与已售出的商品一旦被下架，订单就再也走不完，服务端也会按 ITEM_NOT_EDITABLE 拒绝。
+    offShelfable: source.status === enums.ItemStatus.ON_SALE || source.status === enums.ItemStatus.DRAFT
   };
 }
 
 function buildAdminItemViews(list) {
   return (list || []).map(buildAdminItemView);
+}
+
+function buildAdminOrderView(order) {
+  const source = order || {};
+  const item = orderView.buildItemSnapshotView(source.item);
+  const buyer = orderView.buildUserView(source.buyer);
+  const seller = orderView.buildUserView(source.seller);
+  return {
+    id: idOf(source.id),
+    orderNo: source.orderNo || '',
+    status: source.status || '',
+    statusLabel: enums.orderStatusLabel(source.status),
+    statusTone: enums.orderStatusTone(source.status),
+    amountText: orderView.formatMoney(source.amount),
+    itemTitle: item.title,
+    itemImageUrl: item.imageUrl,
+    buyerName: buyer.nickname,
+    buyerId: buyer.id,
+    sellerName: seller.nickname,
+    sellerId: seller.id,
+    createdAt: formatDateTime(source.createdAt)
+  };
+}
+
+function buildAdminOrderViews(list) {
+  return (list || []).map(buildAdminOrderView);
 }
 
 // 审计详情的键值串。结构随动作变化，只做展示，不解释含义。
@@ -144,6 +171,8 @@ module.exports = {
   buildUserViews: buildUserViews,
   buildAdminItemView: buildAdminItemView,
   buildAdminItemViews: buildAdminItemViews,
+  buildAdminOrderView: buildAdminOrderView,
+  buildAdminOrderViews: buildAdminOrderViews,
   formatDetail: formatDetail,
   buildAuditLogView: buildAuditLogView,
   buildAuditLogViews: buildAuditLogViews

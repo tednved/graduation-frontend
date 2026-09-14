@@ -91,7 +91,7 @@ describe('管理端用户视图', function () {
 });
 
 describe('管理端商品视图', function () {
-  it('已下架与已删除不再提供下架按钮，管理员锁定单独展示', function () {
+  it('只有在售与草稿提供下架按钮：已预订/已售出下架会把订单卡死', function () {
     const onSale = adminView.buildAdminItemView({
       id: 9,
       title: '二手自行车',
@@ -113,6 +113,12 @@ describe('管理端商品视图', function () {
     assert.equal(onSale.sellerId, '6');
     assert.equal(onSale.categoryName, '交通工具');
     assert.equal(onSale.offShelfable, true);
+
+    // 草稿还没上架，管理员仍可锁定。
+    assert.equal(adminView.buildAdminItemView({ id: '11', status: 'DRAFT' }).offShelfable, true);
+    // 已预订（有进行中订单）与已售出的商品一旦下架，接单/拒单/取消/收货会被商品状态拦下，按钮必须隐藏。
+    assert.equal(adminView.buildAdminItemView({ id: '12', status: 'RESERVED' }).offShelfable, false);
+    assert.equal(adminView.buildAdminItemView({ id: '13', status: 'SOLD' }).offShelfable, false);
 
     const offShelf = adminView.buildAdminItemView({
       id: '10',
@@ -176,5 +182,28 @@ describe('审计视图', function () {
     assert.deepEqual(adminView.buildUserViews(null), []);
     assert.deepEqual(adminView.buildAdminItemViews(undefined), []);
     assert.deepEqual(adminView.buildCertificationViews([]), []);
+  });
+});
+
+describe('管理端订单视图', function () {
+  it('同时展示买卖双方与快照，ID 保持字符串', function () {
+    const view = adminView.buildAdminOrderView({
+      id: '9007199254740993',
+      orderNo: 'O202609130001',
+      status: 'CONFIRMED',
+      amount: '88.00',
+      item: { itemId: '7', title: '二手相机', imageUrl: '/media/3', price: '88.00' },
+      buyer: { id: '8', nickname: '买家' },
+      seller: { id: '9', nickname: '卖家' },
+      createdAt: '2026-09-13T02:30:00.000Z'
+    });
+    assert.equal(view.id, '9007199254740993');
+    assert.equal(view.statusLabel, '待交付');
+    assert.equal(view.amountText, '¥88.00');
+    assert.equal(view.itemTitle, '二手相机');
+    assert.equal(view.itemImageUrl, 'http://127.0.0.1:8080/media/3');
+    assert.equal(view.buyerId, '8');
+    assert.equal(view.sellerId, '9');
+    assert.deepEqual(adminView.buildAdminOrderViews(null), []);
   });
 });

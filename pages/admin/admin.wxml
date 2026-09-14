@@ -10,7 +10,7 @@
     >{{item.label}}</view>
   </view>
 
-  <!-- 筛选区：四个区域各一组，同一时刻只显示当前区域的那组 -->
+  <!-- 筛选区：五个区域各一组，同一时刻只显示当前区域的那组 -->
   <block wx:if="{{tab === 'certifications'}}">
     <view class="admin__filter">
       <picker
@@ -80,6 +80,30 @@
         bindchange="onItemStatusChange"
       >
         <view class="admin__picker-value">{{itemStatusOptions[itemStatusIndex].label}} ▾</view>
+      </picker>
+    </view>
+  </block>
+
+  <block wx:elif="{{tab === 'orders'}}">
+    <view class="admin__filter">
+      <input
+        class="admin__input"
+        value="{{orderKeyword}}"
+        placeholder="订单号 / 商品标题"
+        confirm-type="search"
+        bindinput="onOrderKeywordInput"
+        bindconfirm="onOrderKeywordConfirm"
+      />
+      <view class="admin__search" bindtap="onOrderKeywordConfirm">查询</view>
+      <picker
+        class="admin__picker"
+        mode="selector"
+        range="{{orderStatusOptions}}"
+        range-key="label"
+        value="{{orderStatusIndex}}"
+        bindchange="onOrderStatusChange"
+      >
+        <view class="admin__picker-value">{{orderStatusOptions[orderStatusIndex].label}} ▾</view>
       </picker>
     </view>
   </block>
@@ -171,6 +195,19 @@
         <view class="admin-card__ops" wx:if="{{item.offShelfable}}">
           <button class="admin-btn admin-btn--danger" size="mini" disabled="{{acting}}" data-id="{{item.id}}" data-title="{{item.title}}" bindtap="onOffShelfItem">强制下架</button>
         </view>
+      </view>
+    </block>
+
+    <!-- 全站订单：只读，点击进入管理员专属详情 -->
+    <block wx:elif="{{tab === 'orders'}}">
+      <view class="admin-card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onTapOrder">
+        <view class="admin-card__head">
+          <text class="admin-card__title">{{item.itemTitle}}</text>
+          <text class="item-status item-status--{{item.statusTone}}">{{item.statusLabel}}</text>
+        </view>
+        <view class="admin-card__meta">订单 {{item.orderNo}} · {{item.amountText}}</view>
+        <view class="admin-card__meta">买家 {{item.buyerName}} · 卖家 {{item.sellerName}}</view>
+        <view class="admin-card__meta">{{item.createdAt}}</view>
       </view>
     </block>
 

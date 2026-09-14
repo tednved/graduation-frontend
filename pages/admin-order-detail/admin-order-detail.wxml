@@ -1,0 +1,25 @@
+<view class="admin-order">
+  <view class="list-state" wx:if="{{loading}}"><view class="list-state__desc">加载中…</view></view>
+  <view class="list-state" wx:elif="{{invalid}}"><view class="list-state__title">订单不存在</view></view>
+  <view class="list-state" wx:elif="{{failed}}">
+    <view class="list-state__title">加载失败</view><button size="mini" bindtap="onRetry">重试</button>
+  </view>
+  <block wx:elif="{{detail}}">
+    <view class="admin-order__card">
+      <view class="admin-order__title">{{detail.item.title}}</view>
+      <view class="admin-order__line">订单号：{{detail.orderNo}}</view>
+      <view class="admin-order__line">状态：{{detail.statusLabel}} · 金额：{{detail.amountText}}</view>
+      <view class="admin-order__line">买家：{{detail.buyer.nickname}}（{{detail.buyer.id}}）</view>
+      <view class="admin-order__line">卖家：{{detail.seller.nickname}}（{{detail.seller.id}}）</view>
+      <view class="admin-order__line" wx:if="{{detail.cancelReason}}">原因：{{detail.cancelReason}}</view>
+    </view>
+    <view class="admin-order__card">
+      <view class="admin-order__title">订单时间线</view>
+      <view class="admin-order__event" wx:for="{{detail.events}}" wx:key="id">
+        <view>{{item.actionLabel}} · {{item.operatorName}}</view>
+        <view class="admin-order__muted">{{item.time}} {{item.remark}}</view>
+      </view>
+    </view>
+    <view class="admin-order__notice">管理视图只读；请由真实买卖双方处理订单状态。</view>
+  </block>
+</view>

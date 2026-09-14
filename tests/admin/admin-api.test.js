@@ -66,6 +66,8 @@ describe('管理端接口契约', function () {
     await adminApi.enableUser('3');
     await adminApi.listItems({});
     await adminApi.offShelfItem('9', '违规内容');
+    await adminApi.listOrders({});
+    await adminApi.getOrder('11');
     await adminApi.listAuditLogs({});
 
     assert.deepEqual(seen(http.calls), [
@@ -77,6 +79,8 @@ describe('管理端接口契约', function () {
       'POST /admin/users/3/enable',
       'GET /admin/items?page=0&size=20',
       'POST /admin/items/9/off-shelf',
+      'GET /admin/orders?page=0&size=20',
+      'GET /admin/orders/11',
       'GET /admin/audit-logs?page=0&size=20'
     ]);
   });
@@ -107,9 +111,15 @@ describe('管理端接口契约', function () {
     await adminApi.listItems({ status: 'OFF_SHELF', keyword: '手机', sellerId: '5' });
     assert.equal(decodedPathOf(http.calls[3].url), '/admin/items?page=0&size=20&status=OFF_SHELF&keyword=手机&sellerId=5');
 
-    await adminApi.listAuditLogs({ action: 'USER_DISABLE', from: '2026-09-01T00:00:00.000Z' });
+    await adminApi.listOrders({ status: 'CONFIRMED', keyword: ' O2026 ', buyerId: '8', sellerId: '9' });
     assert.equal(
       decodedPathOf(http.calls[4].url),
+      '/admin/orders?page=0&size=20&status=CONFIRMED&buyerId=8&sellerId=9&keyword=O2026'
+    );
+
+    await adminApi.listAuditLogs({ action: 'USER_DISABLE', from: '2026-09-01T00:00:00.000Z' });
+    assert.equal(
+      decodedPathOf(http.calls[5].url),
       '/admin/audit-logs?page=0&size=20&action=USER_DISABLE&from=2026-09-01T00:00:00.000Z'
     );
   });

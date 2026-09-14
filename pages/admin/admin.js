@@ -1,5 +1,5 @@
 // pages/admin/admin.js
-// 管理员控制台：认证审核、用户启停、商品强制下架、审计查询四个区域。
+// 管理员控制台：认证、用户、商品、全站订单与审计五个区域。
 //
 // 权限：入口在「我的」页按 GET /users/me 的 role 决定是否显示，但入口只是体验，
 // 不是门禁。本页加载时自己再查一次 role，非 ADMIN 直接返回并提示；真正的授权在服务端
@@ -18,16 +18,19 @@ const errorHandler = require('../../utils/error-handler.js');
 
 const PAGE_SIZE = 20;
 const ITEM_DETAIL_ROUTE = '/pages/item-detail/item-detail';
+const ADMIN_ORDER_DETAIL_ROUTE = '/pages/admin-order-detail/admin-order-detail';
 
 const TAB_CERT = 'certifications';
 const TAB_USER = 'users';
 const TAB_ITEM = 'items';
+const TAB_ORDER = 'orders';
 const TAB_AUDIT = 'audit';
 
 const TABS = [
   { key: TAB_CERT, label: '认证审核' },
   { key: TAB_USER, label: '用户' },
   { key: TAB_ITEM, label: '商品' },
+  { key: TAB_ORDER, label: '订单' },
   { key: TAB_AUDIT, label: '审计' }
 ];
 
@@ -35,6 +38,7 @@ const EMPTY_TEXT = {
   certifications: { title: '没有符合条件的认证申请', desc: '换个状态筛选试试' },
   users: { title: '没有符合条件的用户', desc: '换个关键字或筛选条件试试' },
   items: { title: '没有符合条件的商品', desc: '换个状态或关键字试试' },
+  orders: { title: '没有符合条件的订单', desc: '换个状态或关键字试试' },
   audit: { title: '没有审计记录', desc: '管理员操作后会计入这里' }
 };
 
@@ -67,6 +71,10 @@ Page({
     itemKeyword: '',
     itemStatusIndex: 0,
     itemStatusOptions: enums.ITEM_STATUS_FILTER_OPTIONS,
+
+    orderKeyword: '',
+    orderStatusIndex: 0,
+    orderStatusOptions: enums.ORDER_STATUS_FILTER_OPTIONS,
 
     auditActionIndex: 0,
     auditActionOptions: enums.AUDIT_ACTION_FILTER_OPTIONS
@@ -174,6 +182,13 @@ Page({
     this.loadFirstPage();
   },
 
+  onOrderStatusChange: function (event) {
+    const index = Number(event.detail.value);
+    if (index === this.data.orderStatusIndex) return;
+    this.alive.setData(this, { orderStatusIndex: index });
+    this.loadFirstPage();
+  },
+
   // 关键字输入。只在用户确认输入后查询，避免每敲一个字打一次接口。
   onUserKeywordInput: function (event) {
     this.alive.setData(this, { userKeyword: event.detail.value || '' });
@@ -188,6 +203,14 @@ Page({
   },
 
   onItemKeywordConfirm: function () {
+    this.loadFirstPage();
+  },
+
+  onOrderKeywordInput: function (event) {
+    this.alive.setData(this, { orderKeyword: event.detail.value || '' });
+  },
+
+  onOrderKeywordConfirm: function () {
     this.loadFirstPage();
   },
 
@@ -218,6 +241,14 @@ Page({
         size: PAGE_SIZE
       };
     }
+    if (tab === TAB_ORDER) {
+      return {
+        keyword: this.data.orderKeyword.trim(),
+        status: optionValue(this.data.orderStatusOptions, this.data.orderStatusIndex),
+        page: page,
+        size: PAGE_SIZE
+      };
+    }
     return {
       status: optionValue(this.data.certStatusOptions, this.data.certStatusIndex),
       page: page,
@@ -230,6 +261,7 @@ Page({
     const query = this.currentQuery(page);
     if (tab === TAB_USER) return adminApi.listUsers(query);
     if (tab === TAB_ITEM) return adminApi.listItems(query);
+    if (tab === TAB_ORDER) return adminApi.listOrders(query);
     if (tab === TAB_AUDIT) return adminApi.listAuditLogs(query);
     return adminApi.listCertifications(query);
   },
@@ -237,6 +269,7 @@ Page({
   buildList: function (tab, items) {
     if (tab === TAB_USER) return adminView.buildUserViews(items);
     if (tab === TAB_ITEM) return adminView.buildAdminItemViews(items);
+    if (tab === TAB_ORDER) return adminView.buildAdminOrderViews(items);
     if (tab === TAB_AUDIT) return adminView.buildAuditLogViews(items);
     return adminView.buildCertificationViews(items);
   },
@@ -402,6 +435,12 @@ Page({
     const id = event.currentTarget.dataset.id;
     if (!id) return;
     wx.navigateTo({ url: ITEM_DETAIL_ROUTE + '?id=' + id });
+  },
+
+  onTapOrder: function (event) {
+    const id = event.currentTarget.dataset.id;
+    if (!id) return;
+    wx.navigateTo({ url: ADMIN_ORDER_DETAIL_ROUTE + '?id=' + id });
   },
 
   onTapUser: function (event) {

@@ -15,7 +15,8 @@
     "pages/order-detail/order-detail",
     "pages/review-create/review-create",
     "pages/user-reviews/user-reviews",
-    "pages/admin/admin"
+    "pages/admin/admin",
+    "pages/admin-order-detail/admin-order-detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",

@@ -1,0 +1,7 @@
+.admin-order { min-height: 100vh; padding: 24rpx; background: #f5f6f8; box-sizing: border-box; }
+.admin-order__card { margin-bottom: 20rpx; padding: 28rpx; background: #fff; border-radius: 16rpx; }
+.admin-order__title { margin-bottom: 18rpx; font-size: 32rpx; font-weight: 600; }
+.admin-order__line { margin-top: 12rpx; color: #444; line-height: 1.6; }
+.admin-order__event { padding: 18rpx 0; border-bottom: 1rpx solid #eee; }
+.admin-order__muted, .admin-order__notice { color: #888; font-size: 24rpx; }
+.admin-order__notice { padding: 12rpx; text-align: center; }
